@@ -1,10 +1,14 @@
 import "./App.scss";
-import { Button } from "./components/Button/Button";
+import { Checkbox } from "./components/Checkbox/Checkbox";
 
 function App() {
   return (
     <div className="App">
-      <Button>Test button</Button>
+      <div className="checkbox-wrapper">
+        <Checkbox label="Idle" id="test" isChecked={false} />
+        <Checkbox label="Hovered" id="test1" isChecked={false} />
+        <Checkbox label="Completed" id="test2" isChecked={true} />
+      </div>
     </div>
   );
 }
