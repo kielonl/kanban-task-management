@@ -9,9 +9,10 @@ interface TextFieldProps
 }
 
 export const TextField: React.FC<TextFieldProps> = ({ error, ...props }) => {
+  const theme = "dark";
   return (
     <label className={`input-wrapper ${error && "input-error"}`}>
-      <input {...props} className="input" />
+      <input {...props} className="input input-dark" />
     </label>
   );
 };
