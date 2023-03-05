@@ -1,14 +1,15 @@
 import "./App.scss";
-import { Checkbox } from "./components/Checkbox/Checkbox";
+import { TextField } from "./components/TextField/TextField";
 
 function App() {
   return (
     <div className="App">
-      <div className="checkbox-wrapper">
-        <Checkbox label="Idle" id="test" isChecked={false} />
-        <Checkbox label="Hovered" id="test1" isChecked={false} />
-        <Checkbox label="Completed" id="test2" isChecked={true} />
-      </div>
+      <TextField
+        value={"value"}
+        type="text"
+        placeholder="Enter task name"
+        error={false}
+      />
     </div>
   );
 }
