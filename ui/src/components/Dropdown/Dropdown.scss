@@ -1,5 +1,7 @@
 $primary: #635fc7;
 $gray: #828fa3;
+$dark-gray: #20212c;
+$light-gray: #2b2c37;
 
 .dropdown-wrapper {
   width: 20%;
@@ -38,10 +40,10 @@ $gray: #828fa3;
 
 .dropdown-dark {
   .dropdown-header {
-    background: #2b2c37;
+    background: $dark-gray;
     color: white;
   }
   .dropdown-list {
-    background: #20212c;
+    background: $light-gray;
   }
 }

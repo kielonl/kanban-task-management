@@ -22,6 +22,16 @@ export const Dropdown: React.FC<DropdownProps> = ({ children }) => {
   const [selected, setSelected] = useState<string>("Select an option");
   const theme = "light";
 
+  window.addEventListener("click", (e) => {
+    if (!listOpen) return;
+
+    if (e.target instanceof HTMLElement) {
+      if (!e.target.classList.contains("dropdown-header")) {
+        setListOpen(false);
+      }
+    }
+  });
+
   //fix this later
   // @ts-ignore
   const childrenWithProps: ChildrenWithProps[] = React.Children.map(

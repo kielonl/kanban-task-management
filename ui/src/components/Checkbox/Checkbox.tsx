@@ -1,6 +1,13 @@
 import "./Checkbox.scss";
 
-interface CheckboxProps extends React.HTMLAttributes<HTMLInputElement> {
+interface CheckboxProps
+  extends Omit<
+    React.DetailedHTMLProps<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      HTMLInputElement
+    >,
+    "type"
+  > {
   label: string;
   id: string;
   isChecked: boolean;
