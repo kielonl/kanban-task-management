@@ -1,0 +1,48 @@
+$idle-light: #f4f7fd;
+$idle-dark: #20212c;
+$hover-light: rgba(99, 95, 199, 0.2);
+$hover-dark: rgb(57, 58, 90);
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: auto;
+  background: $idle-light;
+  padding: 0.75em 0.35em;
+  margin: 0.4em;
+  width: 100%;
+
+  &:hover {
+    background: $hover-light;
+  }
+
+  input:checked + div {
+    text-decoration: line-through 1px solid black;
+    opacity: 0.3;
+  }
+
+  input {
+    filter: hue-rotate(30deg);
+  }
+}
+
+.checkbox-dark {
+  background: $idle-dark;
+  color: white;
+
+  &:hover {
+    background: $hover-dark;
+  }
+
+  input:checked {
+    opacity: 1;
+  }
+
+  input {
+    opacity: 0.1;
+  }
+}

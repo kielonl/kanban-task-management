@@ -1,0 +1,44 @@
+$primary: #635fc7;
+$primary-hover: #a8a4ff;
+$secondary: #ffffff;
+$destructive: #ea5555;
+$destructive-hover: #ff9898;
+
+.button {
+  padding: 0.75em 5em;
+  border: none;
+  margin: 0.4em auto;
+  border-radius: 20px;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 23px;
+  color: $secondary;
+  text-align: center;
+  cursor: pointer;
+}
+
+.button-large {
+  font-size: 15px;
+}
+
+.button-primary {
+  background: $primary;
+  color: $secondary;
+  &:hover {
+    background: $primary-hover;
+  }
+}
+
+.button-secondary {
+  background: $secondary;
+  color: $primary;
+}
+
+.button-destructive {
+  background: $destructive;
+  &:hover {
+    background: $destructive-hover;
+  }
+}
