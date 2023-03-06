@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { ArrowDown } from "../../assets/icons/arrowDown";
+import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
 import "./Dropdown.scss";
 
