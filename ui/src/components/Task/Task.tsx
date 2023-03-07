@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TaskProps } from "../../types";
+import { Status, TaskProps, Tasks } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
@@ -7,13 +7,37 @@ import { Modal } from "../Modal/Modal";
 import { Typography } from "../Typography/Typography";
 import "./Task.scss";
 
-export const Task: React.FC<TaskProps> = ({ ...data }) => {
+export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
   const { title, description, status, subtasks } = data;
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
   ).length;
+
+  const setChecked = (index: number) => {
+    const newSubtasks = [...subtasks];
+    newSubtasks[index].isCompleted = !newSubtasks[index].isCompleted;
+    setTask((prev: Tasks[]) => {
+      return prev.map((task) => {
+        if (task.id === data.id) {
+          return { ...task, subtasks: newSubtasks };
+        }
+        return task;
+      });
+    });
+  };
+
+  const setStatus = (newStatus: Status) => {
+    setTask((prev: Tasks[]) => {
+      return prev.map((task) => {
+        if (task.id === data.id) {
+          return { ...task, status: newStatus };
+        }
+        return task;
+      });
+    });
+  };
 
   return (
     <>
@@ -34,9 +58,11 @@ export const Task: React.FC<TaskProps> = ({ ...data }) => {
               label={subtask.title}
               id={String(index)}
               isChecked={subtask.isCompleted}
+              key={index}
+              setChecked={() => setChecked(index)}
             />
           ))}
-          <Dropdown>
+          <Dropdown currentValue={status} setValue={setStatus}>
             <DropdownItem name="todo" />
             <DropdownItem name="doing" />
             <DropdownItem name="done" />

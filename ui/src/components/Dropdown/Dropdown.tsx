@@ -8,18 +8,25 @@ interface DropdownProps
   extends React.DetailedHTMLProps<
     React.SelectHTMLAttributes<HTMLSelectElement>,
     HTMLSelectElement
-  > {}
-
-interface ChildrenWithProps extends React.ReactElement {
-  props: {
-    onClick: () => void;
-    name: string;
-  };
+  > {
+  currentValue?: string;
+  setValue: (value: any) => void;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ children }) => {
+interface ChildrenWithProps extends React.ReactElement {
+  onClick: () => void;
+  name: string;
+}
+
+export const Dropdown: React.FC<DropdownProps> = ({
+  currentValue,
+  children,
+  setValue,
+}) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("Select an option");
+  const [selected, setSelected] = useState<string>(
+    currentValue || "Select an option"
+  );
   const theme = "light";
 
   window.addEventListener("click", (e) => {
@@ -49,6 +56,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ children }) => {
     setListOpen(false);
     if (!childrenWithProps) return;
     setSelected(childrenWithProps[index].props.name);
+    setValue(childrenWithProps[index].props.name);
   };
 
   return (

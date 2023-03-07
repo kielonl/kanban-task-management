@@ -1,6 +1,7 @@
 export type Status = "todo" | "doing" | "done";
 
-export interface TaskProps {
+export interface Tasks {
+  //change name to Task later
   id: string;
   title: string;
   description: string;
@@ -9,4 +10,8 @@ export interface TaskProps {
     title: string;
     isCompleted: boolean;
   }[];
+}
+
+export interface TaskProps extends Tasks {
+  setTask: Dispatch<SetStateAction<Tasks[]>>;
 }
