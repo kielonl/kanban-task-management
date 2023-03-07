@@ -2,28 +2,28 @@ import { useCallback, useEffect } from "react";
 import "./Modal.scss";
 
 interface ModalProps {
-  show: boolean;
+  isShown: boolean;
   hide: () => void;
   children?: React.ReactNode;
 }
 
-export const Modal: React.FC<ModalProps> = ({ show, hide, children }) => {
+export const Modal: React.FC<ModalProps> = ({ isShown, hide, children }) => {
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") hide();
   }, []);
 
   useEffect(() => {
-    if (show) {
+    if (isShown) {
       document.addEventListener("keydown", handleKeyPress);
       return () => {
         document.removeEventListener("keydown", handleKeyPress);
       };
     }
-  }, [handleKeyPress, show]);
+  }, [handleKeyPress, isShown]);
 
   return (
     <>
-      {show && (
+      {isShown && (
         <>
           <div className="modal-backdrop"></div>
           <div className="modal-wrapper">{children}</div>
