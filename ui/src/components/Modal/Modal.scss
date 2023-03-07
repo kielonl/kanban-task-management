@@ -11,9 +11,8 @@
 .modal-wrapper {
   z-index: 1000;
   position: fixed;
-  width: 35%;
-  max-height: 75%;
-  overflow-y: scroll;
+  width: 30rem;
+  overflow: hidden;
   background: white;
 
   transform: translate(-50%, -50%);
