@@ -1,3 +1,4 @@
+$dark-gray: #2b2c37;
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -23,4 +24,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.modal-dark {
+  background: $dark-gray;
 }
