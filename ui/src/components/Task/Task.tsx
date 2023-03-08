@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Status, TaskProps, Tasks } from "../../types";
+import { TaskProps, Tasks } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import Dropdown from "../Dropdown/Dropdown";
 import { Modal } from "../Modal/Modal";
@@ -9,34 +9,29 @@ import "./Task.scss";
 export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
   const { title, description, status, subtasks } = data;
   const [showModal, setShowModal] = useState<boolean>(false);
+  const theme = "dark";
 
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
   ).length;
 
-  const setChecked = (index: number) => {
-    const newSubtasks = [...subtasks];
-    newSubtasks[index].isCompleted = !newSubtasks[index].isCompleted;
+  const updateTask = (field: keyof Tasks, value: any) => {
     setTask((prev: Tasks[]) => {
       return prev.map((task) => {
         if (task.id === data.id) {
-          return { ...task, subtasks: newSubtasks };
+          return { ...task, [field]: value };
         }
         return task;
       });
     });
   };
 
-  const setStatus = (newStatus: Status) => {
-    setTask((prev: Tasks[]) => {
-      return prev.map((task) => {
-        if (task.id === data.id) {
-          return { ...task, status: newStatus };
-        }
-        return task;
-      });
-    });
+  const setChecked = (index: number) => {
+    const newSubtasks = [...subtasks];
+    newSubtasks[index].isCompleted = !newSubtasks[index].isCompleted;
+    updateTask("subtasks", newSubtasks);
   };
+
   return (
     <>
       {/* not sure about it, might delete later */}
@@ -59,14 +54,26 @@ export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
             />
           ))}
           <Dropdown.Menu currentValue={status}>
-            <Dropdown.Item name={"Todo"} onClick={() => setStatus("todo")} />
-            <Dropdown.Item name={"Doing"} onClick={() => setStatus("doing")} />
-            <Dropdown.Item name={"Done"} onClick={() => setStatus("done")} />
+            <Dropdown.Item
+              name={"Todo"}
+              onClick={() => updateTask("status", "todo")}
+            />
+            <Dropdown.Item
+              name={"Doing"}
+              onClick={() => updateTask("status", "doing")}
+            />
+            <Dropdown.Item
+              name={"Done"}
+              onClick={() => updateTask("status", "done")}
+            />
           </Dropdown.Menu>
         </div>
       </Modal>
 
-      <div className="task-wrapper" onClick={() => setShowModal(true)}>
+      <div
+        className={`task-wrapper task-${theme}`}
+        onClick={() => setShowModal(true)}
+      >
         <Typography variant="M" className="task-title">
           {title}
         </Typography>

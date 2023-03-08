@@ -8,6 +8,7 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isShown, hide, children }) => {
+  const theme = "dark";
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") hide();
   }, []);
@@ -26,7 +27,7 @@ export const Modal: React.FC<ModalProps> = ({ isShown, hide, children }) => {
       {isShown && (
         <>
           <div className="modal-backdrop"></div>
-          <div className="modal-wrapper">{children}</div>
+          <div className={`modal-wrapper modal-${theme}`}>{children}</div>
         </>
       )}
     </>

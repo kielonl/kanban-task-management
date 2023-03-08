@@ -1,11 +1,12 @@
 $medium-gray: #828fa3;
+$dark-gray: #2b2c37;
 
 .task-wrapper {
   display: flex;
   flex-direction: column;
   background: white;
   padding: 1.5rem;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(#364e7e, 0.115) 0px 4px 6px;
   width: 15em;
   border-radius: 8px;
 
@@ -13,6 +14,12 @@ $medium-gray: #828fa3;
     margin-top: 1em;
     color: $medium-gray;
   }
+}
+
+.task-dark {
+  background: $dark-gray;
+  color: white;
+  box-shadow: rgba(#364e7e, 0.115) 0px 4px 6px;
 }
 
 .task-modal-container {
