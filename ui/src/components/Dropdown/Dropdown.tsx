@@ -4,31 +4,31 @@ import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
 import "./Dropdown.scss";
 
-interface DropdownProps
+interface DropdownMenuProps
   extends React.DetailedHTMLProps<
     React.SelectHTMLAttributes<HTMLSelectElement>,
     HTMLSelectElement
   > {
   currentValue?: string;
-  setValue: (value: any) => void;
 }
 
-interface ChildrenWithProps extends React.ReactElement {
+interface DropdownItemProps {
   onClick: () => void;
   name: string;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
-  currentValue,
-  children,
-  setValue,
-}) => {
-  const [listOpen, setListOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>(
-    currentValue || "Select an option"
+const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
+  return (
+    <div role="listitem" className="dropdown-item" onClick={() => onClick()}>
+      {name}
+    </div>
   );
-  const theme = "light";
+};
 
+const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
+  const [listOpen, setListOpen] = useState<boolean>(false);
+
+  const theme = "light";
   window.addEventListener("click", (e) => {
     if (!listOpen) return;
 
@@ -39,26 +39,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
   });
 
-  //fix this later
-  // @ts-ignore
-  const childrenWithProps: ChildrenWithProps[] = React.Children.map(
-    children,
-    (child, index) => {
-      if (!React.isValidElement(child)) return child;
-
-      return React.cloneElement(child, {
-        onClick: () => selectItem(index),
-      });
-    }
-  );
-
-  const selectItem = (index: number) => {
-    setListOpen(false);
-    if (!childrenWithProps) return;
-    setSelected(childrenWithProps[index].props.name);
-    setValue(childrenWithProps[index].props.name);
-  };
-
   return (
     <div
       className={`dropdown-wrapper ${
@@ -66,7 +46,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       } dropdown-${theme}`}
     >
       <div className="dropdown-header" onClick={() => setListOpen(!listOpen)}>
-        {selected}
+        {currentValue || "Select an option"}
         <div className="dropdown-toggle">
           {listOpen ? <ArrowUp /> : <ArrowDown />}
         </div>
@@ -74,11 +54,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {listOpen && (
         <div role="list" className="dropdown-list">
-          {childrenWithProps?.map((child) => {
-            return child;
-          })}
+          {children}
         </div>
       )}
     </div>
   );
 };
+
+const Dropdown = {
+  Item,
+  Menu,
+};
+
+export default Dropdown;
