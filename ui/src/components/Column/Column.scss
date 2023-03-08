@@ -1,0 +1,22 @@
+.column-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: fit-content;
+  .column-name {
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    .column-dot {
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+    }
+  }
+  .column-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
