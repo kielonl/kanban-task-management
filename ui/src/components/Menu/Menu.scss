@@ -1,0 +1,103 @@
+$main-purple: #635fc7;
+$medium-gray: #828fa3;
+
+.upperbar-wrapper {
+  .upperbar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.sidebar-wrapper {
+  height: 100%;
+  width: 250px; //maybe change later
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  right: 25px;
+  border-right: #e4ebfa 1px solid;
+
+  .sidebar-logo {
+    padding: 2rem;
+  }
+
+  .sidebar-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .sidebar-boards {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+
+      & > *:first-child,
+      & > *:last-child {
+        padding: 0 2rem;
+      }
+
+      .sidebar-create-board {
+        color: $main-purple;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      .sidebar-board {
+        width: 60%;
+        color: black;
+        padding: 0.75rem 2rem;
+        display: flex;
+        gap: 0.5rem;
+        border-radius: 0 100px 100px 0;
+        color: $medium-gray;
+        cursor: pointer;
+        &:nth-child(2) {
+          margin-top: 1rem;
+        }
+
+        &:not(.sidebar-board-selected):hover {
+          background: rgba($main-purple, 0.1);
+          color: $main-purple;
+        }
+      }
+
+      .sidebar-board-selected {
+        color: white;
+        background: $main-purple;
+        border-radius: 0 100px 100px 0;
+      }
+    }
+    .sidebar-hide {
+      cursor: pointer;
+      padding: 2rem;
+      color: #828fa3;
+    }
+  }
+}
+
+.show-sidebar-button-wrapper {
+  transition: all 0.5s;
+  transition-delay: 0.5s;
+  position: fixed;
+  bottom: 2rem;
+  background: $main-purple;
+  padding: 1rem 1.5rem;
+  border-radius: 0 100px 100px 0;
+  cursor: pointer;
+}
+
+.sidebar-hidden {
+  margin-left: -250px;
+}
+
+.spacer {
+  flex: 1;
+}
