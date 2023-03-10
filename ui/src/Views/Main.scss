@@ -1,3 +1,5 @@
+@import "../styles/ThemeVariables.scss";
+
 $medium-gray: #828fa3;
 .main-wrapper {
   transition: margin-left 0.5s;
@@ -6,7 +8,11 @@ $medium-gray: #828fa3;
 
 .main-board {
   height: 100%;
-  background: rgb(244, 247, 253);
+
+  @include themify($themes) {
+    background: themed("backgroundSecondary");
+    transition: themed("transition");
+  }
 
   display: flex;
   flex-direction: column;

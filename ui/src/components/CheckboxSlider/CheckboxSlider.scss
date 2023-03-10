@@ -1,0 +1,46 @@
+$primary: #635fc7;
+
+.switch {
+  display: inline-block;
+  height: 20px;
+  position: relative;
+  width: 40px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  background-color: $primary;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  background-color: white;
+  bottom: 3px;
+  left: 4px;
+  content: "";
+  width: 14px;
+  height: 14px;
+  transition: 0.4s;
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

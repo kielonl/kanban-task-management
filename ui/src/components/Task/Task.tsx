@@ -9,7 +9,6 @@ import "./Task.scss";
 export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
   const { title, description, status, subtasks } = data;
   const [showModal, setShowModal] = useState<boolean>(false);
-  const theme = "dark";
 
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
@@ -70,10 +69,7 @@ export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
         </div>
       </Modal>
 
-      <div
-        className={`task-wrapper task-${theme}`}
-        onClick={() => setShowModal(true)}
-      >
+      <div className="task-wrapper" onClick={() => setShowModal(true)}>
         <Typography variant="M" className="task-title">
           {title}
         </Typography>

@@ -28,7 +28,6 @@ const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
 const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
 
-  const theme = "light";
   window.addEventListener("click", (e) => {
     if (!listOpen) return;
 
@@ -40,11 +39,7 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   });
 
   return (
-    <div
-      className={`dropdown-wrapper ${
-        listOpen && "list-opened"
-      } dropdown-${theme}`}
-    >
+    <div className={`dropdown-wrapper ${listOpen && "list-opened"}`}>
       <div className="dropdown-header" onClick={() => setListOpen(!listOpen)}>
         {currentValue || "Select an option"}
         <div className="dropdown-toggle">

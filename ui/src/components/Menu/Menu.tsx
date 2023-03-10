@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "../../assets/icons/Icon";
 import { Button } from "../Button/Button";
 import { Logo } from "../Logo/Logo";
+import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
 import "./Menu.scss";
@@ -73,7 +74,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           </div>
           <div className="spacer"></div>
           <div>
-            <div>dark or light mode toggler</div>
+            <ThemeToggler />
             <Typography
               variant="M"
               onClick={() => setIsShown(false)}
