@@ -2,11 +2,16 @@ $main-purple: #635fc7;
 $medium-gray: #828fa3;
 
 .upperbar-wrapper {
+  height: 10vh;
   .upperbar-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
+    .upperbar-name {
+      padding: 2rem;
+    }
   }
 }
 

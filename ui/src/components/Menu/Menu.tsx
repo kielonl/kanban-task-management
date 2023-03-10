@@ -92,7 +92,9 @@ const Upperbar = () => {
   return (
     <div className="upperbar-wrapper">
       <div className="upperbar-container">
-        <Typography variant="XL">{currentBoard.name}</Typography>
+        <Typography variant="XL" className="upperbar-name">
+          {currentBoard.name}
+        </Typography>
         <div className="spacer"></div>
         <Button>+ Add New Task</Button>
         <Icon.Ellipsis />
