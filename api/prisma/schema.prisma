@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model column {
+  id         Int       @id @default(autoincrement()) @db.SmallInt
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  name       String
+  tasks_id   Int?      @db.SmallInt
+  task       task?     @relation(fields: [tasks_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model subtask {
+  id                            Int       @id @default(autoincrement()) @db.SmallInt
+  created_at                    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime? @default(now()) @db.Timestamptz(6)
+  title                         String
+  isCompleted                   Boolean
+  task_id                       Int       @db.SmallInt
+  task_subtask_task_idTotask    task      @relation("subtask_task_idTotask", fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  task_task_subtask_idTosubtask task[]    @relation("task_subtask_idTosubtask")
+}
+
+model task {
+  id                               Int       @id @default(autoincrement()) @db.SmallInt
+  created_at                       DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                       DateTime? @default(now()) @db.Timestamptz(6)
+  title                            String
+  description                      String
+  status                           Status    @default(TODO)
+  subtask_id                       Int?      @db.SmallInt
+  column                           column[]
+  subtask_subtask_task_idTotask    subtask[] @relation("subtask_task_idTotask")
+  subtask_task_subtask_idTosubtask subtask?  @relation("task_subtask_idTosubtask", fields: [subtask_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum Status {
+  TODO
+  DOING
+  DONE
+}
