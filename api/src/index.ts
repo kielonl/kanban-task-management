@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import columnRoutes from "./modules/column/column.route";
 import taskRoutes from "./modules/task/task.route";
 
 const server = Fastify();
@@ -8,6 +9,7 @@ server.get("/test", async (request, reply) => {
 });
 
 const main = async () => {
+  server.register(columnRoutes, { prefix: "/column" });
   server.register(taskRoutes, { prefix: "/task" });
 
   try {

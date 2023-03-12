@@ -10,7 +10,7 @@ export const createTask = async (input: TaskSchema) => {
   return task;
 };
 
-export const getTask = async () => {
+export const getTasks = async () => {
   const task = await prisma.task.findMany({
     include: {
       subtasks: true,

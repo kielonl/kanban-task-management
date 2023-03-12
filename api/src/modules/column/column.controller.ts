@@ -1,84 +1,89 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { TaskSchema } from "./task.schema";
+import { ColumnSchema } from "./column.schema";
 import {
-  createTask,
-  deleteTask,
-  getTasks,
-  getTaskById,
-  updateTask,
-} from "./task.service";
+  createColumn,
+  getColumns,
+  getColumnById,
+  updateColumn,
+  deleteColumn,
+} from "./column.service";
 
-export const createTaskHandler = async (
+export const createColumnHandler = async (
   request: FastifyRequest<{
-    Body: TaskSchema;
+    Body: ColumnSchema;
   }>,
   reply: FastifyReply
 ) => {
   try {
     const body = request.body;
-    const task = await createTask(body);
+    const column = await createColumn(body);
 
-    reply.code(201).send({ task });
+    reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
-    reply.code(500).send({ error: "Incorrect value was provided" });
+    reply.code(500).send({ error: "Internal server error" });
   }
 };
 
-export const getTasksHandler = async (
+export const getColumnsHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
-    const task = await getTasks();
+    const column = await getColumns();
 
-    reply.code(200).send({ tasks: task });
+    reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
     reply.code(500).send({ error: "Internal server error" });
   }
 };
 
-export const getTaskByIdHandler = async (
-  request: FastifyRequest<{ Params: { id: string } }>,
+export const getColumnByIdHandler = async (
+  request: FastifyRequest<{
+    Params: { id: string };
+  }>,
   reply: FastifyReply
 ) => {
   try {
     const { id } = request.params;
-    const task = await getTaskById(id);
+    const column = await getColumnById(id);
 
-    reply.code(200).send({ tasks: task });
+    reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
     reply.code(500).send({ error: "Internal server error" });
   }
 };
 
-export const updateTaskHandler = async (
-  request: FastifyRequest<{ Body: TaskSchema; Params: { id: string } }>,
+export const updateColumnHandler = async (
+  request: FastifyRequest<{
+    Body: ColumnSchema;
+    Params: { id: string };
+  }>,
   reply: FastifyReply
 ) => {
   try {
     const { id } = request.params;
     const body = request.body;
-    const task = await updateTask(id, body);
+    const column = await updateColumn(id, body);
 
-    reply.code(200).send({ task });
+    reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
     reply.code(500).send({ error: "Internal server error" });
   }
 };
 
-export const deleteTaskHandler = async (
+export const deleteColumnHandler = async (
   request: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
   try {
     const { id } = request.params;
-    const task = await deleteTask(id);
+    const column = await deleteColumn(id);
 
-    reply.code(200).send({ task });
+    reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
     reply.code(500).send({ error: "Internal server error" });
