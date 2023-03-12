@@ -1,7 +1,7 @@
 import prisma from "../../utils/prisma";
-import { CreateTaskSchema } from "./task.schema";
+import { TaskSchema } from "./task.schema";
 
-export const createTask = async (input: CreateTaskSchema) => {
+export const createTask = async (input: TaskSchema) => {
   const task = await prisma.task.create({
     data: {
       ...input,
@@ -11,7 +11,11 @@ export const createTask = async (input: CreateTaskSchema) => {
 };
 
 export const getTask = async () => {
-  const task = await prisma.task.findMany();
+  const task = await prisma.task.findMany({
+    include: {
+      subtasks: true,
+    },
+  });
   return task;
 };
 
@@ -24,7 +28,7 @@ export const getTaskById = async (id: string) => {
   return task;
 };
 
-export const updateTask = async (id: string, input: CreateTaskSchema) => {
+export const updateTask = async (id: string, input: TaskSchema) => {
   const task = await prisma.task.update({
     where: {
       id,

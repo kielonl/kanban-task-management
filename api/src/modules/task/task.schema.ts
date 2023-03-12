@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const STATUS = ["TODO", "DOING", "DONE"] as const;
 
-const createTaskSchema = z.object({
+const TaskSchema = z.object({
   title: z
     .string({
       invalid_type_error: "Title must be a string",
@@ -21,6 +21,7 @@ const createTaskSchema = z.object({
     invalid_type_error: "Status must be a string",
     required_error: "status must be one of todo, doing, done",
   }),
+  column_id: z.string().uuid(),
 });
 
-export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
+export type TaskSchema = z.infer<typeof TaskSchema>;

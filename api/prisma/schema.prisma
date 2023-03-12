@@ -12,32 +12,29 @@ model column {
   created_at DateTime? @default(now()) @db.Timestamptz(6)
   updated_at DateTime? @default(now()) @db.Timestamptz(6)
   name       String
-  tasks_id   String?   @db.Uuid
-  task       task?     @relation(fields: [tasks_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tasks      task[]
 }
 
 model subtask {
-  id                            String    @id(map: "subtask1_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at                    DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at                    DateTime? @default(now()) @db.Timestamptz(6)
-  title                         String
-  isCompleted                   Boolean   @default(false)
-  task_id                       String    @db.Uuid
-  task_subtask_task_idTotask    task      @relation("subtask_task_idTotask", fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  task_task_subtask_idTosubtask task[]    @relation("task_subtask_idTosubtask")
+  id          String    @id(map: "subtask1_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  title       String
+  isCompleted Boolean   @default(false)
+  task_id     String    @db.Uuid
+  task        task      @relation(fields: [task_id], references: [id])
 }
 
 model task {
-  id                               String    @id(map: "task1_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at                       DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at                       DateTime? @default(now()) @db.Timestamptz(6)
-  title                            String
-  description                      String
-  status                           Status    @default(TODO)
-  subtask_id                       String?   @db.Uuid
-  column                           column[]
-  subtask_subtask_task_idTotask    subtask[] @relation("subtask_task_idTotask")
-  subtask_task_subtask_idTosubtask subtask?  @relation("task_subtask_idTosubtask", fields: [subtask_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          String    @id(map: "task1_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  title       String
+  description String
+  status      Status    @default(TODO)
+  subtasks    subtask[]
+  column_id   String    @db.Uuid
+  column      column    @relation(fields: [column_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum Status {

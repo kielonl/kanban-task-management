@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { CreateTaskSchema } from "./task.schema";
+import { TaskSchema } from "./task.schema";
 import {
   createTask,
   deleteTask,
@@ -10,7 +10,7 @@ import {
 
 export const createTaskHandler = async (
   request: FastifyRequest<{
-    Body: CreateTaskSchema;
+    Body: TaskSchema;
   }>,
   reply: FastifyReply
 ) => {
@@ -56,7 +56,7 @@ export const getTaskByIdHandler = async (
 };
 
 export const updateTaskHandler = async (
-  request: FastifyRequest<{ Body: CreateTaskSchema; Params: { id: string } }>,
+  request: FastifyRequest<{ Body: TaskSchema; Params: { id: string } }>,
   reply: FastifyReply
 ) => {
   try {
