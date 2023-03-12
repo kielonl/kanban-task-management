@@ -8,6 +8,7 @@ const ColumnSchema = z.object({
     })
     .min(1)
     .max(100),
+  board_id: z.string().uuid(),
 });
 
 export type ColumnSchema = z.infer<typeof ColumnSchema>;
