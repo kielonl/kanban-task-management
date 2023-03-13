@@ -45,6 +45,10 @@ export const getSubtaskByIdHandler = async (
     const { id } = request.params;
     const subtask = await getSubtaskById(id);
 
+    if (!subtask) {
+      reply.code(404).send({ error: "Subtask not found" });
+    }
+
     reply.code(200).send({ subtask });
   } catch (error) {
     console.log(error);
@@ -61,6 +65,10 @@ export const updateSubtaskHandler = async (
     const body = request.body;
     const subtask = await updateSubtask(id, body);
 
+    if (!subtask) {
+      reply.code(404).send({ error: "Subtask not found" });
+    }
+
     reply.code(200).send({ subtask });
   } catch (error) {
     console.log(error);
@@ -75,6 +83,10 @@ export const deleteSubtaskHandler = async (
   try {
     const { id } = request.params;
     const subtask = await deleteSubtask(id);
+
+    if (!subtask) {
+      reply.code(404).send({ error: "Subtask not found" });
+    }
 
     reply.code(200).send({ subtask });
   } catch (error) {

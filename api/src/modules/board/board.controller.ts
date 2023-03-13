@@ -45,6 +45,10 @@ export const getBoardByIdHandler = async (
     const { id } = request.params;
     const board = await getBoardById(id);
 
+    if (!board) {
+      reply.code(404).send({ error: "Board not found" });
+    }
+
     reply.code(200).send({ board });
   } catch (error) {
     console.log(error);

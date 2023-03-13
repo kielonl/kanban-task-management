@@ -47,6 +47,10 @@ export const getTaskByIdHandler = async (
     const { id } = request.params;
     const task = await getTaskById(id);
 
+    if (!task) {
+      reply.code(404).send({ error: "task not found" });
+    }
+
     reply.code(200).send({ tasks: task });
   } catch (error) {
     console.log(error);
@@ -63,6 +67,10 @@ export const updateTaskHandler = async (
     const body = request.body;
     const task = await updateTask(id, body);
 
+    if (!task) {
+      reply.code(404).send({ error: "task not found" });
+    }
+
     reply.code(200).send({ task });
   } catch (error) {
     console.log(error);
@@ -77,6 +85,10 @@ export const deleteTaskHandler = async (
   try {
     const { id } = request.params;
     const task = await deleteTask(id);
+
+    if (!task) {
+      reply.code(404).send({ error: "task not found" });
+    }
 
     reply.code(200).send({ task });
   } catch (error) {

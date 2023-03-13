@@ -6,10 +6,6 @@ import taskRoutes from "./modules/task/task.route";
 
 const server = Fastify();
 
-server.get("/test", async (request, reply) => {
-  return { hello: "world" };
-});
-
 const main = async () => {
   server.register(boardRoutes, { prefix: "/board" });
   server.register(columnRoutes, { prefix: "/column" });

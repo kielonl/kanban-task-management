@@ -49,6 +49,10 @@ export const getColumnByIdHandler = async (
     const { id } = request.params;
     const column = await getColumnById(id);
 
+    if (!column) {
+      reply.code(404).send({ error: "Column not found" });
+    }
+
     reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
@@ -68,6 +72,10 @@ export const updateColumnHandler = async (
     const body = request.body;
     const column = await updateColumn(id, body);
 
+    if (!column) {
+      reply.code(404).send({ error: "Column not found" });
+    }
+
     reply.code(200).send({ column });
   } catch (error) {
     console.log(error);
@@ -82,6 +90,10 @@ export const deleteColumnHandler = async (
   try {
     const { id } = request.params;
     const column = await deleteColumn(id);
+
+    if (!column) {
+      reply.code(404).send({ error: "Column not found" });
+    }
 
     reply.code(200).send({ column });
   } catch (error) {
