@@ -1,4 +1,4 @@
-import "./Checkbox.scss";
+import "./CheckboxSlider.scss";
 
 interface CheckboxProps
   extends Omit<
@@ -8,29 +8,25 @@ interface CheckboxProps
     >,
     "type"
   > {
-  label: string;
   id: string;
   isChecked: boolean;
   setChecked: () => void;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
-  label,
+export const CheckboxSlider: React.FC<CheckboxProps> = ({
   id,
   isChecked,
   setChecked,
-  ...props
 }) => {
   return (
-    <label className="checkbox-container" htmlFor={id}>
+    <label className="switch" htmlFor={id}>
       <input
         type="checkbox"
         id={id}
         checked={isChecked}
         onChange={() => setChecked()}
-        {...props}
       />
-      <div>{label}</div>
+      <div className="slider round"></div>
     </label>
   );
 };

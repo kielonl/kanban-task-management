@@ -1,8 +1,16 @@
+@import "../../styles/ThemeVariables.scss";
 $main-purple: #635fc7;
 $medium-gray: #828fa3;
 
 .upperbar-wrapper {
   height: 10vh;
+
+  @include themify($themes) {
+    background: themed("background");
+    color: themed("colorText");
+    transition: themed("transition");
+  }
+
   .upperbar-container {
     display: flex;
     flex-direction: row;
@@ -16,17 +24,22 @@ $medium-gray: #828fa3;
 }
 
 .sidebar-wrapper {
+  @include themify($themes) {
+    background: themed("background");
+    color: themed("colorText");
+    transition: themed("transition");
+    border-right: themed("line");
+  }
+
   height: 100%;
   width: 250px; //maybe change later
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: white;
   overflow-x: hidden;
   transition: 0.5s;
   right: 25px;
-  border-right: #e4ebfa 1px solid;
 
   .sidebar-logo {
     padding: 2rem;

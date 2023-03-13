@@ -1,3 +1,4 @@
+@import "../../styles/ThemeVariables.scss";
 $primary: #635fc7;
 $gray: #828fa3;
 $dark-gray: #20212c;
@@ -10,11 +11,16 @@ $light-gray: #2b2c37;
     flex-direction: row;
     justify-content: space-between;
     font-size: 15px;
-    border: 1px solid $gray;
+    border: 1px solid rgba($gray, 0.25);
     border-radius: 4px;
     padding: 0.5rem;
-    background: white;
     color: black;
+
+    @include themify($themes) {
+      background: themed("backgroundSecondary");
+      color: themed("colorText");
+      transition: themed("transition");
+    }
   }
   .dropdown-list {
     display: flex;
@@ -27,6 +33,9 @@ $light-gray: #2b2c37;
     max-height: 5em;
     overflow-y: scroll;
     cursor: pointer;
+    @include themify($themes) {
+      background: themed("background");
+    }
     div:hover {
       color: $primary;
     }
@@ -35,15 +44,5 @@ $light-gray: #2b2c37;
 .list-opened {
   .dropdown-header {
     border: 1px solid $primary;
-  }
-}
-
-.dropdown-dark {
-  .dropdown-header {
-    background: $dark-gray;
-    color: white;
-  }
-  .dropdown-list {
-    background: $light-gray;
   }
 }

@@ -1,3 +1,4 @@
+@import "../../styles/ThemeVariables.scss";
 $medium-gray: #828fa3;
 $dark-gray: #2b2c37;
 
@@ -14,12 +15,12 @@ $dark-gray: #2b2c37;
     margin-top: 1em;
     color: $medium-gray;
   }
-}
 
-.task-dark {
-  background: $dark-gray;
-  color: white;
-  box-shadow: rgba(#364e7e, 0.115) 0px 4px 6px;
+  @include themify($themes) {
+    background: themed("background");
+    transition: themed("transition");
+    color: themed("colorText");
+  }
 }
 
 .task-modal-container {

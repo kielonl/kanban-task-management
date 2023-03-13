@@ -1,3 +1,4 @@
+@import "../../styles/ThemeVariables.scss";
 $dark-gray: #2b2c37;
 .modal-backdrop {
   position: fixed;
@@ -14,7 +15,6 @@ $dark-gray: #2b2c37;
   position: fixed;
   width: 30rem;
   overflow: hidden;
-  background: white;
 
   transform: translate(-50%, -50%);
   top: 50%;
@@ -24,8 +24,9 @@ $dark-gray: #2b2c37;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
 
-.modal-dark {
-  background: $dark-gray;
+  @include themify($themes) {
+    background: themed("background");
+    color: themed("colorText");
+  }
 }

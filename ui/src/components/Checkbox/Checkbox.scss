@@ -1,9 +1,15 @@
-$idle-light: #f4f7fd;
-$idle-dark: #20212c;
-$hover-light: rgba(99, 95, 199, 0.2);
-$hover-dark: rgb(57, 58, 90);
+@import "../../styles/ThemeVariables.scss";
 
 .checkbox-container {
+  @include themify($themes) {
+    background: themed("backgroundSecondary");
+    &:hover {
+      background: rgba(themed("colorPrimary"), 0.25);
+    }
+    color: themed("colorText");
+    transition: themed("transition");
+  }
+
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -11,31 +17,13 @@ $hover-dark: rgb(57, 58, 90);
   font-size: 12px;
   font-weight: bold;
   line-height: auto;
-  background: $idle-light;
   padding: 0.75em 0;
   margin: 0.4em 0;
   width: 100%;
 
-  &:hover {
-    background: $hover-light;
-  }
-
   input:checked + div {
-    text-decoration: line-through 1px solid black;
+    text-decoration: line-through 1px solid currentColor;
     opacity: 0.3;
-  }
-
-  input {
-    filter: hue-rotate(30deg);
-  }
-}
-
-.checkbox-dark {
-  background: $idle-dark;
-  color: white;
-
-  &:hover {
-    background: $hover-dark;
   }
 
   input:checked {
@@ -43,6 +31,7 @@ $hover-dark: rgb(57, 58, 90);
   }
 
   input {
+    filter: hue-rotate(30deg);
     opacity: 0.1;
   }
 }
