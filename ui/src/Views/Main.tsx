@@ -1,11 +1,28 @@
 import { useState } from "react";
-import { Button } from "../components/Button/Button";
+import { UseApiRequest } from "../api/useApiRequest";
+import { Column } from "../components/Column/Column";
 import { Menu } from "../components/Menu/Menu";
-import { Typography } from "../components/Typography/Typography";
+
+import { BoardType, ColumnType } from "../types";
+import { METHOD } from "../utils/constants";
 import "./Main.scss";
 
 export const Main = () => {
+  //delete this code in later commits
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
+  const { response, loading, error } = UseApiRequest(METHOD.GET, "/board");
+  if (error) {
+    return error;
+  }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  const listBoards = response?.data.board.map((board: BoardType) => {
+    return board.columns.map((column: ColumnType) => {
+      return <Column name={column.name} tasks={column.tasks} key={column.id} />;
+    });
+  });
+
   return (
     <div
       className="main-wrapper"
@@ -13,12 +30,7 @@ export const Main = () => {
     >
       <Menu.Sidebar isShown={showSidebar} setIsShown={setShowSidebar} />
       <Menu.Upperbar />
-      <div className="main-board">
-        <Typography variant="L">
-          This board is empty. Create a new column to get started.
-        </Typography>
-        <Button>+ Add New Column</Button>
-      </div>
+      <div className="main-board">{listBoards}</div>
     </div>
   );
 };
