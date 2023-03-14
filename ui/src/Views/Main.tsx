@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu } from "../components/Menu/Menu";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { addBoard, deleteBoard, getBoards } from "../store/board/boardSlice";
+import { getBoards } from "../store/board/boardSlice";
 import "./Main.scss";
 
 export const Main = () => {
@@ -14,7 +14,6 @@ export const Main = () => {
     dispatch(getBoards());
   }, []);
 
-  console.log({ boards, loading });
   return (
     <div
       className="main-wrapper"

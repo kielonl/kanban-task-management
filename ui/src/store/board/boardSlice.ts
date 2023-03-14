@@ -1,10 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAll, create, remove, update } from "../../services";
 import { BoardType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
 interface BorderState {
   boards: BoardType[];
+  currentBoard: { name: string; id: string };
   loading: boolean;
 }
 
@@ -15,6 +16,7 @@ interface BoardCreate {
 
 const initialState: BorderState = {
   boards: [],
+  currentBoard: { name: "", id: "" },
   loading: true,
 };
 
@@ -49,13 +51,21 @@ export const updateBoard = createAsyncThunk(
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentBoard: (
+      state,
+      action: PayloadAction<{ name: string; id: string }>
+    ) => {
+      state.currentBoard = { ...action.payload };
+    },
+  },
   extraReducers: {
     [getBoards.pending.type]: (state) => {
       state.loading = true;
     },
     [getBoards.fulfilled.type]: (state, action) => {
       state.boards = [...action.payload];
+      state.currentBoard = { ...(action.payload[0] || { name: "", id: "" }) };
       state.loading = false;
     },
     [getBoards.rejected.type]: (state) => {
@@ -97,6 +107,6 @@ export const boardSlice = createSlice({
   },
 });
 
-export const {} = boardSlice.actions;
+export const { setCurrentBoard } = boardSlice.actions;
 
 export default boardSlice.reducer;
