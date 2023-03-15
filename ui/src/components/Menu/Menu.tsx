@@ -1,6 +1,9 @@
 import React from "react";
 import { Icon } from "../../assets/icons/Icon";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { setCurrentBoard } from "../../store/board/boardSlice";
 import { Button } from "../Button/Button";
+import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
@@ -26,24 +29,12 @@ const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
   );
 };
 
-const boards = [
-  {
-    id: 1,
-    name: "Platform Launch",
-  },
-  {
-    id: 2,
-    name: "Marketing Plan",
-  },
-  {
-    id: 3,
-    name: "Roadmap",
-  },
-];
-
-const currentBoard = boards[0];
-
 const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
+  const { loading, boards, currentBoard } = useAppSelector(
+    (state) => state.board
+  );
+  const dispatch = useAppDispatch();
+
   return (
     <>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
@@ -55,18 +46,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           <div className="sidebar-boards">
             <Typography variant="S">ALL BOARDS ({boards.length})</Typography>
 
-            {boards.map((board) => (
-              <Typography
-                variant="M"
-                className={`sidebar-board ${
-                  board.id === currentBoard.id && "sidebar-board-selected"
-                }`}
-                key={board.id}
-              >
-                <Icon.Board />
-                {board.name}
-              </Typography>
-            ))}
+            {loading ? (
+              <Loader />
+            ) : (
+              boards.map((board) => (
+                <Typography
+                  variant="M"
+                  onClick={() => dispatch(setCurrentBoard({ ...board }))}
+                  className={`sidebar-board ${
+                    board.id === currentBoard.id && "sidebar-board-selected"
+                  }`}
+                  key={board.id}
+                >
+                  <Icon.Board />
+                  {board.name}
+                </Typography>
+              ))
+            )}
 
             <Typography variant="M" className="sidebar-create-board">
               + Create New Board
@@ -90,11 +86,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
 };
 
 const Upperbar = () => {
+  const { loading, currentBoard } = useAppSelector((state) => state.board);
+
   return (
     <div className="upperbar-wrapper">
       <div className="upperbar-container">
         <Typography variant="XL" className="upperbar-name">
-          {currentBoard.name}
+          {loading ? <Loader /> : currentBoard.name}
         </Typography>
         <div className="spacer"></div>
         <Button>+ Add New Task</Button>
