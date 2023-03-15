@@ -23,6 +23,7 @@ export const getOne = async (endpoint: ENDPOINT, id: string) => {
   const response = await callApi(HTTP_METHOD.GET, `${endpoint}/${id}`);
   return response.data;
 };
+
 export const create = async (
   endpoint: ENDPOINT,
   data: BoardApi | ColumnApi | TaskApi | SubTaskApi

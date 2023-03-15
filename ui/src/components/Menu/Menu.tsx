@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { setCurrentBoard } from "../../store/board/boardSlice";
+import { getBoardsNames } from "../../store/board/boardSlice";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
@@ -35,6 +36,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
   );
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(getBoardsNames());
+  }, []);
+
   return (
     <>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
@@ -49,18 +54,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
             {loading ? (
               <Loader />
             ) : (
-              boards.map((board) => (
-                <Typography
-                  variant="M"
-                  onClick={() => dispatch(setCurrentBoard({ ...board }))}
-                  className={`sidebar-board ${
-                    board.id === currentBoard.id && "sidebar-board-selected"
-                  }`}
-                  key={board.id}
-                >
-                  <Icon.Board />
-                  {board.name}
-                </Typography>
+              boards.map((board, index: number) => (
+                <Link to={`/board/${board.id}`} key={index}>
+                  <Typography
+                    variant="M"
+                    className={`sidebar-board ${
+                      board.id === currentBoard.id && "sidebar-board-selected"
+                    }`}
+                    key={board.id}
+                  >
+                    <Icon.Board />
+                    {board.name}
+                  </Typography>
+                </Link>
               ))
             )}
 

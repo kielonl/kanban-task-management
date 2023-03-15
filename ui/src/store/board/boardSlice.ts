@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAll, create, remove, update } from "../../services";
+import { getAll, create, remove, update, getOne } from "../../services";
 import { BoardType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
 interface BorderState {
-  boards: BoardType[];
-  currentBoard: { name: string; id: string };
+  boards: Omit<BoardType[], "created_at" | "updated_at" | "columns">;
+  currentBoard: BoardType;
   loading: boolean;
 }
 
@@ -16,13 +16,33 @@ interface BoardCreate {
 
 const initialState: BorderState = {
   boards: [],
-  currentBoard: { name: "", id: "" },
+  currentBoard: {
+    name: "",
+    id: "",
+    created_at: "",
+    updated_at: "",
+    columns: [],
+  },
   loading: true,
 };
 
 export const getBoards = createAsyncThunk("boards/getBoards", async () => {
   return getAll(ENDPOINT.BOARDS);
 });
+
+export const getBoardsNames = createAsyncThunk(
+  "boards/getBoardsNames",
+  async () => {
+    return getAll(ENDPOINT.BOARDS_NAMES);
+  }
+);
+
+export const getBoardById = createAsyncThunk(
+  "boards/getBoardById",
+  async (id: string) => {
+    return getOne(ENDPOINT.BOARDS, id);
+  }
+);
 
 export const addBoard = createAsyncThunk(
   "boards/createBoard",
@@ -51,24 +71,27 @@ export const updateBoard = createAsyncThunk(
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
-  reducers: {
-    setCurrentBoard: (
-      state,
-      action: PayloadAction<{ name: string; id: string }>
-    ) => {
-      state.currentBoard = { ...action.payload };
-    },
-  },
+  reducers: {},
   extraReducers: {
-    [getBoards.pending.type]: (state) => {
+    [getBoardById.pending.type]: (state) => {
       state.loading = true;
     },
-    [getBoards.fulfilled.type]: (state, action) => {
-      state.boards = [...action.payload];
-      state.currentBoard = { ...(action.payload[0] || { name: "", id: "" }) };
+    [getBoardById.fulfilled.type]: (state, action) => {
+      state.currentBoard = { ...action.payload.board };
       state.loading = false;
     },
-    [getBoards.rejected.type]: (state) => {
+    [getBoardById.rejected.type]: (state) => {
+      state.loading = false;
+    },
+
+    [getBoardsNames.pending.type]: (state) => {
+      state.loading = true;
+    },
+    [getBoardsNames.fulfilled.type]: (state, action) => {
+      state.boards = [...action.payload];
+      state.loading = false;
+    },
+    [getBoardsNames.rejected.type]: (state) => {
       state.loading = false;
     },
 
@@ -107,6 +130,6 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { setCurrentBoard } = boardSlice.actions;
+export const {} = boardSlice.actions;
 
 export default boardSlice.reducer;
