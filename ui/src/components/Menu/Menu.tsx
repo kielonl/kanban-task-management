@@ -3,6 +3,7 @@ import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { setCurrentBoard } from "../../store/board/boardSlice";
 import { Button } from "../Button/Button";
+import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
@@ -46,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
             <Typography variant="S">ALL BOARDS ({boards.length})</Typography>
 
             {loading ? (
-              <div>Loading...</div>
+              <Loader />
             ) : (
               boards.map((board) => (
                 <Typography
@@ -91,7 +92,7 @@ const Upperbar = () => {
     <div className="upperbar-wrapper">
       <div className="upperbar-container">
         <Typography variant="XL" className="upperbar-name">
-          {loading ? "Loading..." : currentBoard.name}
+          {loading ? <Loader /> : currentBoard.name}
         </Typography>
         <div className="spacer"></div>
         <Button>+ Add New Task</Button>
