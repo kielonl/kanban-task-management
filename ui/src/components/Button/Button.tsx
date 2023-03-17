@@ -1,20 +1,26 @@
 import "./Button.scss";
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
   size?: "large" | "small";
-  type?: "primary" | "secondary" | "destructive";
+  variant?: "primary" | "secondary" | "destructive";
 }
 
 export const Button: React.FC<ButtonProps> = ({
   size,
-  type,
+  variant,
   children,
   ...props
 }) => {
   return (
     <button
       {...props}
-      className={`button button-${size || "small"} button-${type || "primary"}`}
+      className={`button button-${size || "small"} button-${
+        variant || "primary"
+      }`}
     >
       {children}
     </button>

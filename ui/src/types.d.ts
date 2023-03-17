@@ -6,10 +6,7 @@ export interface Tasks {
   title: string;
   description: string;
   status: Status;
-  subtasks: {
-    title: string;
-    isCompleted: boolean;
-  }[];
+  subtasks: SubTaskType[];
 }
 
 export interface TaskProps extends Tasks {

@@ -6,6 +6,7 @@ $light-gray: #2b2c37;
 
 .dropdown-wrapper {
   width: 100%;
+  position: relative;
   .dropdown-header {
     display: flex;
     flex-direction: row;
@@ -14,7 +15,6 @@ $light-gray: #2b2c37;
     border: 1px solid rgba($gray, 0.25);
     border-radius: 4px;
     padding: 0.5rem;
-    color: black;
 
     @include themify($themes) {
       background: themed("backgroundSecondary");
@@ -23,18 +23,30 @@ $light-gray: #2b2c37;
     }
   }
   .dropdown-list {
+    position: absolute;
+    width: 100%;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     gap: 1em;
-    margin: 0.5em;
-    padding: 1em;
+    margin: 0.5rem 0;
+    & > div {
+      padding: 0.5rem 0 0 1rem;
+    }
+    & > div:first-child {
+      padding-top: 1rem;
+    }
+    & > div:last-child {
+      padding-bottom: 1rem;
+    }
+
     border-radius: 8px;
     color: $gray;
-    max-height: 5em;
+    max-height: 6em;
     overflow-y: scroll;
     cursor: pointer;
     @include themify($themes) {
-      background: themed("background");
+      background: themed("backgroundSecondary");
     }
     div:hover {
       color: $primary;

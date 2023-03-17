@@ -1,73 +1,119 @@
 import { useState } from "react";
-import { TaskProps, Tasks } from "../../types";
+import { useDispatch } from "react-redux";
+import { SubTaskType, TaskProps, Tasks, TaskType } from "../../types";
+import { Button } from "../Button/Button";
 import { Checkbox } from "../Checkbox/Checkbox";
 import Dropdown from "../Dropdown/Dropdown";
+import { TaskForm } from "../Form/Form";
 import { Modal } from "../Modal/Modal";
+import { TextArea } from "../TextArea/TextArea";
+import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
 import "./Task.scss";
 
 export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
-  const { title, description, status, subtasks } = data;
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [tempTask, setTempTask] = useState<Tasks>({ ...data });
 
+  const { title, description, status, subtasks } = tempTask;
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
   ).length;
 
+  const dispatch = useDispatch();
+
   const updateTask = (field: keyof Tasks, value: any) => {
-    setTask((prev: Tasks[]) => {
-      return prev.map((task) => {
-        if (task.id === data.id) {
-          return { ...task, [field]: value };
-        }
-        return task;
-      });
+    setTempTask((prev: Tasks) => {
+      return { ...prev, [field]: value };
     });
   };
 
-  const setChecked = (index: number) => {
-    const newSubtasks = [...subtasks];
-    newSubtasks[index].isCompleted = !newSubtasks[index].isCompleted;
+  const setChecked = (id: string) => {
+    const newSubtasks = subtasks.map((subtask) => {
+      if (subtask.id === id) {
+        return { ...subtask, isCompleted: !subtask.isCompleted };
+      }
+      return subtask;
+    });
     updateTask("subtasks", newSubtasks);
+  };
+
+  const deleteSubtask = (id: string) => {
+    const newSubtasks = subtasks.filter((subtask) => subtask.id !== id);
+    updateTask("subtasks", newSubtasks);
+  };
+
+  const addEmptySubtask = () => {
+    updateTask("subtasks", [...subtasks, { title: "", isCompleted: false }]);
+  };
+
+  const handleEditTask = () => {
+    //call to api should be here
+    console.log(tempTask);
+    setShowModal(false);
   };
 
   return (
     <>
-      {/* not sure about it, might delete later */}
-      <Modal isShown={showModal} hide={() => setShowModal(false)}>
-        <div className="task-modal-container">
-          <Typography variant="L">{title}</Typography>
-          <Typography variant="BodyL" className="task-modal-description">
-            {description}
-          </Typography>
-          <Typography variant="BodyM" className="task-modal-subtasks-done">
-            Subtasks ({doneSubtasks} of {subtasks.length})
-          </Typography>
-          {subtasks.map((subtask, index) => (
-            <Checkbox
-              label={subtask.title}
-              isChecked={subtask.isCompleted}
-              setChecked={() => setChecked(index)}
-              id={String(index)}
-              key={index}
+      <Modal
+        title={"Edit Task"}
+        content={
+          <TaskForm.Form
+            submit={
+              <Button type="button" onClick={() => handleEditTask()}>
+                Edit Task
+              </Button>
+            }
+          >
+            <TextField
+              type={"text"}
+              label={"title"}
+              onChange={(e) =>
+                setTempTask((prev) => ({ ...prev, title: e.target.value }))
+              }
             />
-          ))}
-          <Dropdown.Menu currentValue={status}>
-            <Dropdown.Item
-              name={"Todo"}
-              onClick={() => updateTask("status", "todo")}
+            <TextArea
+              label={"description"}
+              onChange={(e) =>
+                setTempTask((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
             />
-            <Dropdown.Item
-              name={"Doing"}
-              onClick={() => updateTask("status", "doing")}
+            <TaskForm.ListSubTasks
+              type="edit"
+              //change types later
+              subtasks={subtasks}
+              setChecked={setChecked}
+              deleteSubtask={deleteSubtask}
             />
-            <Dropdown.Item
-              name={"Done"}
-              onClick={() => updateTask("status", "done")}
-            />
-          </Dropdown.Menu>
-        </div>
-      </Modal>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => addEmptySubtask()}
+            >
+              Add subtask
+            </Button>
+            <Dropdown.Menu currentValue={status}>
+              <Dropdown.Item
+                name={"Todo"}
+                onClick={() => updateTask("status", "TODO")}
+              />
+              <Dropdown.Item
+                name={"Doing"}
+                onClick={() => updateTask("status", "DOING")}
+              />
+              <Dropdown.Item
+                name={"Done"}
+                onClick={() => updateTask("status", "DONE")}
+              />
+            </Dropdown.Menu>
+          </TaskForm.Form>
+        }
+        isShown={showModal}
+        hide={() => setShowModal(false)}
+      />
 
       <div className="task-wrapper" onClick={() => setShowModal(true)}>
         <Typography variant="M" className="task-title">
