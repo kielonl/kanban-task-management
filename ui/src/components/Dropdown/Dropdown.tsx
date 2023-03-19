@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
+import { Typography } from "../Typography/Typography";
 import "./Dropdown.scss";
 
 interface DropdownMenuProps
@@ -41,16 +42,18 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   return (
     <div className={`dropdown-wrapper ${listOpen && "list-opened"}`}>
       <div className="dropdown-header" onClick={() => setListOpen(!listOpen)}>
-        {currentValue || "Select an option"}
+        <Typography variant="BodyL">
+          {currentValue || "Select an option"}
+        </Typography>
         <div className="dropdown-toggle">
           {listOpen ? <ArrowUp /> : <ArrowDown />}
         </div>
       </div>
 
       {listOpen && (
-        <div role="list" className="dropdown-list">
+        <Typography variant="BodyM" role="list" className="dropdown-list">
           {children}
-        </div>
+        </Typography>
       )}
     </div>
   );

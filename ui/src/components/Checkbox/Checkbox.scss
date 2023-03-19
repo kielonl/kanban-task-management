@@ -20,8 +20,9 @@
   padding: 0.75em 0;
   margin: 0.4em 0;
   width: 100%;
+  cursor: pointer;
 
-  input:checked + div {
+  input:checked + .checkbox-label {
     text-decoration: line-through 1px solid currentColor;
     opacity: 0.3;
   }
@@ -33,5 +34,6 @@
   input {
     filter: hue-rotate(30deg);
     opacity: 0.1;
+    cursor: pointer;
   }
 }

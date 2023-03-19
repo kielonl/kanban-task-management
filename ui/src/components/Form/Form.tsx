@@ -11,71 +11,80 @@ interface FormProps
     HTMLFormElement
   > {
   children: React.ReactNode;
-
-  submit: React.ReactNode;
 }
 
 interface ListSubTasksProps {
   type: "add" | "edit" | "checkout";
   subtasks: SubTaskType[];
-  setChecked: (index: string) => void;
-  deleteSubtask?: (index: string) => void;
+  updateSubtask?: (id: string, field: keyof SubTaskType, value: any) => void;
+  deleteSubtask?: (index: number) => void;
 }
 
-const Form: React.FC<FormProps> = ({ children, submit }) => {
-  return (
-    <form className="form-container">
-      {children}
-      {submit}
-    </form>
-  );
+const Form: React.FC<FormProps> = ({ children }) => {
+  return <form className="form-container">{children}</form>;
 };
 
 const ListSubTasks: React.FC<ListSubTasksProps> = ({
   subtasks,
-  setChecked,
+  updateSubtask,
   deleteSubtask,
   type,
 }) => {
-  const handleDeleteSubtask = (id: string) => {
-    if (!deleteSubtask) return;
-    deleteSubtask(id);
+  const handleEditSubtaskTitle = (id: string, title: string) => {
+    if (!updateSubtask) return;
+    updateSubtask(id, "title", title);
   };
+
+  const handleEditSubtaskCompletion = (id: string) => {
+    if (!updateSubtask) return;
+    updateSubtask(id, "isCompleted", true);
+  };
+
+  const handleDeleteSubtask = (index: number) => {
+    if (!deleteSubtask) return;
+    deleteSubtask(index);
+  };
+
+  const subtasksAmount = subtasks.length;
+
+  const doneSubtasks: number = subtasks.filter(
+    (subtask) => subtask.isCompleted
+  ).length;
 
   const checkoutView = subtasks.map((subtask) => {
     return (
       <Checkbox
         label={subtask.title}
         isChecked={subtask.isCompleted}
-        setChecked={() => {
-          console.log(subtask.id);
-          setChecked(subtask.id);
-        }}
+        setChecked={() => handleEditSubtaskCompletion(subtask.id)}
         id={String(subtask.id)}
         key={subtask.id}
       />
     );
   });
 
-  const EditAddtView = subtasks.map((subtask) => {
+  const EditAddtView = subtasks.map((subtask, index) => {
     return (
-      <>
+      <div key={index}>
         <div className="edit-subtask-container">
           <div className="form-subtask-input">
             <TextField
               label={""}
               value={type === "edit" ? subtask.title : ""}
-              key={subtask.id}
+              onChange={(e) =>
+                handleEditSubtaskTitle(subtask.id, e.target.value)
+              }
+              onClick={() => console.log(subtask)}
             />
           </div>
           <div
             className="form-subtask-delete"
-            onClick={() => handleDeleteSubtask(subtask.id)}
+            onClick={() => handleDeleteSubtask(index)}
           >
             <Icon.Cross />
           </div>
         </div>
-      </>
+      </div>
     );
   });
 
@@ -87,7 +96,9 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
 
   return (
     <div>
-      <Typography variant="BodyM">Subtasks</Typography>
+      <Typography variant="BodyM">
+        Subtasks ({doneSubtasks} of {subtasksAmount})
+      </Typography>
       {view[type]}
     </div>
   );

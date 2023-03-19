@@ -11,9 +11,8 @@
     resize: none;
     border: 1px solid rgba(#828fa3, 25%);
     border-radius: 4px;
-
+    background: transparent;
     @include themify($themes) {
-      background: themed("backgroundSecondary");
       color: themed("colorText");
       transition: themed("transition");
     }

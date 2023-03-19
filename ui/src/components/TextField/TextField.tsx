@@ -20,7 +20,7 @@ export const TextField: React.FC<TextFieldProps> = ({
       <div className="input-label">
         <Typography variant="BodyM">{label}</Typography>
       </div>
-      <input {...props} className={`input`} />
+      <input {...props} className="input" />
     </label>
   );
 };

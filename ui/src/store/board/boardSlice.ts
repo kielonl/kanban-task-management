@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAll, create, remove, update, getOne } from "../../services";
-import { BoardType } from "../../types";
+import { BoardType, TaskType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
-interface BorderState {
+interface BoardState {
   boards: Omit<BoardType[], "created_at" | "updated_at" | "columns">;
   currentBoard: BoardType;
   loading: boolean;
@@ -14,7 +14,7 @@ interface BoardCreate {
   name: string;
 }
 
-const initialState: BorderState = {
+const initialState: BoardState = {
   boards: [],
   currentBoard: {
     name: "",
@@ -68,65 +68,100 @@ export const updateBoard = createAsyncThunk(
   }
 );
 
+export const updateTaskApi = createAsyncThunk(
+  "task/updateTask",
+  async (task: TaskType) => {
+    await update(ENDPOINT.TASKS, task.id, task);
+  }
+);
+
+export const createTaskApi = createAsyncThunk(
+  "task/createTask",
+  async (task: TaskType) => {
+    await create(ENDPOINT.TASKS, task);
+  }
+);
+
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
   reducers: {},
-  extraReducers: {
-    [getBoardById.pending.type]: (state) => {
+  extraReducers: (builder) => {
+    builder.addCase(getBoardById.pending, (state) => {
       state.loading = true;
-    },
-    [getBoardById.fulfilled.type]: (state, action) => {
+    });
+    builder.addCase(getBoardById.fulfilled, (state, action) => {
       state.currentBoard = { ...action.payload.board };
       state.loading = false;
-    },
-    [getBoardById.rejected.type]: (state) => {
+    });
+    builder.addCase(getBoardById.rejected, (state) => {
       state.loading = false;
-    },
+    });
 
-    [getBoardsNames.pending.type]: (state) => {
+    builder.addCase(getBoardsNames.pending, (state) => {
       state.loading = true;
-    },
-    [getBoardsNames.fulfilled.type]: (state, action) => {
+    });
+    builder.addCase(getBoardsNames.fulfilled, (state, action) => {
       state.boards = [...action.payload];
       state.loading = false;
-    },
-    [getBoardsNames.rejected.type]: (state) => {
+    });
+    builder.addCase(getBoardsNames.rejected, (state) => {
       state.loading = false;
-    },
+    });
 
-    [addBoard.pending.type]: (state) => {
+    builder.addCase(addBoard.pending, (state) => {
       state.loading = true;
-    },
-    [addBoard.fulfilled.type]: (state, action) => {
+    });
+    builder.addCase(addBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
       state.loading = false;
-    },
-    [addBoard.rejected.type]: (state) => {
-      state.loading = false;
-    },
+    });
 
-    [deleteBoard.pending.type]: (state) => {
+    builder.addCase(addBoard.rejected, (state) => {
+      state.loading = false;
+    });
+
+    builder.addCase(deleteBoard.pending, (state) => {
       state.loading = true;
-    },
-    [deleteBoard.fulfilled.type]: (state, action) => {
+    });
+    builder.addCase(deleteBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
       state.loading = false;
-    },
-    [deleteBoard.rejected.type]: (state) => {
+    });
+    builder.addCase(deleteBoard.rejected, (state) => {
       state.loading = false;
-    },
+    });
 
-    [updateBoard.pending.type]: (state) => {
+    builder.addCase(updateBoard.pending, (state) => {
       state.loading = true;
-    },
-    [updateBoard.fulfilled.type]: (state, action) => {
+    });
+    builder.addCase(updateBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
       state.loading = false;
-    },
-    [updateBoard.rejected.type]: (state) => {
+    });
+    builder.addCase(updateBoard.rejected, (state) => {
       state.loading = false;
-    },
+    });
+
+    builder.addCase(updateTaskApi.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateTaskApi.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(updateTaskApi.rejected, (state) => {
+      state.loading = false;
+    });
+
+    builder.addCase(createTaskApi.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createTaskApi.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(createTaskApi.rejected, (state) => {
+      state.loading = false;
+    });
   },
 });
 

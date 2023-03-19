@@ -15,9 +15,8 @@ $light-gray: #2b2c37;
     border: 1px solid rgba($gray, 0.25);
     border-radius: 4px;
     padding: 0.5rem;
-
+    background: transparent;
     @include themify($themes) {
-      background: themed("backgroundSecondary");
       color: themed("colorText");
       transition: themed("transition");
     }
@@ -25,7 +24,7 @@ $light-gray: #2b2c37;
   .dropdown-list {
     position: absolute;
     width: 100%;
-    z-index: 3;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     gap: 1em;

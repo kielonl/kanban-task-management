@@ -8,11 +8,10 @@ $dark-gray: #2b2c37;
 
   input {
     @include themify($themes) {
-      background: themed("backgroundSecondary");
       color: themed("colorText");
       transition: themed("transition");
     }
-
+    background: transparent;
     font-size: 15px;
     border: 1px solid rgba(#828fa3, 25%);
     border-radius: 4px;

@@ -1,18 +1,5 @@
 export type Status = "TODO" | "DOING" | "DONE";
 
-export interface Tasks {
-  //change name to Task later
-  id: string;
-  title: string;
-  description: string;
-  status: Status;
-  subtasks: SubTaskType[];
-}
-
-export interface TaskProps extends Tasks {
-  setTask: Dispatch<SetStateAction<Tasks[]>>;
-}
-
 export interface Core {
   id: string;
   created_at: string;
@@ -22,6 +9,7 @@ export interface Core {
 export interface SubTaskType extends Core {
   title: string;
   isCompleted: boolean;
+  task_id: string;
 }
 
 export interface TaskType extends Core {

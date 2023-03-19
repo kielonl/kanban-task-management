@@ -27,7 +27,13 @@ export const Board = () => {
         <Loader />
       ) : (
         currentBoard.columns.map((column) => {
-          return <Column tasks={[...column.tasks]} name={column.name} />;
+          return (
+            <Column
+              tasks={[...column.tasks]}
+              name={column.name}
+              key={column.id}
+            />
+          );
         })
       )}
     </div>

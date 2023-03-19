@@ -11,11 +11,11 @@ interface TextAreaProps
 
 export const TextArea: React.FC<TextAreaProps> = ({ label, ...props }) => {
   return (
-    <label className={`textarea-wrapper`}>
+    <label className="textarea-wrapper">
       <div className="textarea-label">
         <Typography variant="BodyM">{label}</Typography>
       </div>
-      <textarea {...props} className={`textarea`} />
+      <textarea {...props} className="textarea" />
     </label>
   );
 };
