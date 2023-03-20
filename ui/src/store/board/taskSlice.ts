@@ -1,16 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SubTaskType, TaskType } from "../../types";
+import { Status, SubTaskType } from "../../types";
 
-interface TaskRequired
-  extends Omit<TaskType, "created_at" | "updated_at" | "id"> {}
+interface TaskSliceType {
+  id: string;
+  title: string;
+  description: string;
+  status: Status;
+  column_id: string;
+  subtasks: SubTaskType[];
+}
 
 interface TaskState {
-  task: TaskRequired;
+  task: TaskSliceType;
   loading: boolean;
 }
 
 const initialState: TaskState = {
   task: {
+    id: "",
     title: "",
     description: "",
     status: "TODO",
@@ -24,13 +31,13 @@ export const taskSlice = createSlice({
   name: "task",
   initialState,
   reducers: {
-    setTask: (state, action: PayloadAction<TaskType>) => {
+    setTask: (state, action: PayloadAction<TaskSliceType>) => {
       state.task = action.payload;
     },
 
     updateTask: (
       state,
-      action: PayloadAction<{ field: keyof TaskRequired; value: any }>
+      action: PayloadAction<{ field: keyof TaskSliceType; value: any }>
     ) => {
       const { field, value } = action.payload;
       state.task[field] = value;
@@ -39,17 +46,20 @@ export const taskSlice = createSlice({
     updateSubtask: (
       state,
       action: PayloadAction<{
-        id: string;
+        index: number;
         field: keyof SubTaskType;
         value: any;
       }>
     ) => {
-      const { id, field, value } = action.payload;
-      const subtask = state.task.subtasks.find((subtask) => subtask.id === id);
-      //fix this typescript error
-      subtask[field] = value;
-    },
+      const { index, field, value } = action.payload;
 
+      //if the field is isCompleted, then we need to convert the value to a boolean
+      if (field === "isCompleted") {
+        state.task.subtasks[index][field] = value === "true";
+      } else {
+        state.task.subtasks[index][field] = value;
+      }
+    },
     deleteSubtask: (state, action: PayloadAction<{ index: number }>) => {
       const { index } = action.payload;
       state.task.subtasks.splice(index, 1);

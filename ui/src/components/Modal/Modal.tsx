@@ -114,10 +114,9 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
       />
       <TaskForm.ListSubTasks
         type="edit"
-        //change types later
         subtasks={tempTask.subtasks}
-        updateSubtask={(id: string, field: keyof SubTaskType, value: any) =>
-          dispatch(updateSubtask({ id, field, value }))
+        updateSubtask={(index: number, field: keyof SubTaskType, value: any) =>
+          dispatch(updateSubtask({ index, field, value }))
         }
         deleteSubtask={(index: number) => dispatch(deleteSubtask({ index }))}
       />

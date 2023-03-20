@@ -16,7 +16,7 @@ interface FormProps
 interface ListSubTasksProps {
   type: "add" | "edit" | "checkout";
   subtasks: SubTaskType[];
-  updateSubtask?: (id: string, field: keyof SubTaskType, value: any) => void;
+  updateSubtask?: (id: number, field: keyof SubTaskType, value: any) => void;
   deleteSubtask?: (index: number) => void;
 }
 
@@ -30,14 +30,14 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
   deleteSubtask,
   type,
 }) => {
-  const handleEditSubtaskTitle = (id: string, title: string) => {
+  const handleEditSubtaskTitle = (index: number, title: string) => {
     if (!updateSubtask) return;
-    updateSubtask(id, "title", title);
+    updateSubtask(index, "title", title);
   };
 
-  const handleEditSubtaskCompletion = (id: string) => {
+  const handleEditSubtaskCompletion = (index: number) => {
     if (!updateSubtask) return;
-    updateSubtask(id, "isCompleted", true);
+    updateSubtask(index, "isCompleted", true);
   };
 
   const handleDeleteSubtask = (index: number) => {
@@ -51,14 +51,14 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
     (subtask) => subtask.isCompleted
   ).length;
 
-  const checkoutView = subtasks.map((subtask) => {
+  const checkoutView = subtasks.map((subtask, index) => {
     return (
       <Checkbox
         label={subtask.title}
         isChecked={subtask.isCompleted}
-        setChecked={() => handleEditSubtaskCompletion(subtask.id)}
-        id={String(subtask.id)}
-        key={subtask.id}
+        setChecked={() => handleEditSubtaskCompletion(index)}
+        id={String(index)}
+        key={index}
       />
     );
   });
@@ -71,9 +71,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
             <TextField
               label={""}
               value={type === "edit" ? subtask.title : ""}
-              onChange={(e) =>
-                handleEditSubtaskTitle(subtask.id, e.target.value)
-              }
+              onChange={(e) => handleEditSubtaskTitle(index, e.target.value)}
               onClick={() => console.log(subtask)}
             />
           </div>

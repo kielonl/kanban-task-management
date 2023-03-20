@@ -2,11 +2,9 @@ export type Status = "TODO" | "DOING" | "DONE";
 
 export interface Core {
   id: string;
-  created_at: string;
-  updated_at: string;
 }
 
-export interface SubTaskType extends Core {
+export interface SubTaskType {
   title: string;
   isCompleted: boolean;
   task_id: string;
