@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAll, create, remove, update, getOne } from "../../services";
+import {
+  getAll,
+  create,
+  remove,
+  update,
+  getOne,
+  TaskCreate,
+} from "../../services";
 import { BoardType, TaskType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
@@ -19,8 +26,6 @@ const initialState: BoardState = {
   currentBoard: {
     name: "",
     id: "",
-    created_at: "",
-    updated_at: "",
     columns: [],
   },
   loading: true,
@@ -77,7 +82,14 @@ export const updateTaskApi = createAsyncThunk(
 
 export const createTaskApi = createAsyncThunk(
   "task/createTask",
-  async (task: TaskType) => {
+  async (task: TaskCreate) => {
+    //move this to some better place
+    if (
+      Object.values(task).some((value) => value === "") ||
+      Object.values(task).some((value) => value === null)
+    ) {
+      return;
+    }
     await create(ENDPOINT.TASKS, task);
   }
 );

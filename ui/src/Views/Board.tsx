@@ -4,6 +4,7 @@ import { Column } from "../components/Column/Column";
 import { Loader } from "../components/Loader/Loader";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import { getBoardById } from "../store/board/boardSlice";
+import { setTask } from "../store/board/taskSlice";
 
 export const Board = () => {
   const { currentBoard, loading } = useAppSelector((state) => state.board);

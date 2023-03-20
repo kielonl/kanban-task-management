@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Form } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/hooks";
+import { TaskCreate } from "../../services";
+import { getBoardById } from "../../store/board/boardSlice";
 import {
   addSubtask,
   deleteSubtask,
@@ -33,6 +36,11 @@ interface CheckoutProps {
 
 interface EditProps extends CheckoutProps {
   submit?: (obj: any) => void;
+}
+
+interface AddProps {
+  submit?: (obj: TaskCreate) => void;
+  board_id: string;
 }
 
 export const Window: React.FC<WindowProps> = ({
@@ -154,10 +162,76 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
   );
 };
 
+const Add: React.FC<AddProps> = ({ board_id, submit }) => {
+  const tempTask = useSelector((state: RootState) => state.task.task);
+  const dispatch = useAppDispatch();
+
+  const handleCreateTask = () => {
+    if (!submit) return;
+    submit({ ...tempTask, board_id });
+  };
+
+  return (
+    <TaskForm.Form>
+      <TextField
+        label={"Title"}
+        onChange={(e) =>
+          dispatch(updateTask({ field: "title", value: e.target.value }))
+        }
+      />
+      <TextArea
+        label={"Description"}
+        onChange={(e) =>
+          dispatch(updateTask({ field: "description", value: e.target.value }))
+        }
+      />
+      <TaskForm.ListSubTasks
+        type={"add"}
+        subtasks={tempTask.subtasks}
+        updateSubtask={(index: number, field: keyof SubTaskType, value: any) =>
+          dispatch(updateSubtask({ index, field, value }))
+        }
+        deleteSubtask={(index: number) => dispatch(deleteSubtask({ index }))}
+      />
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={() => dispatch(addSubtask())}
+      >
+        + Add New Subtask
+      </Button>
+      <Dropdown.Menu currentValue={tempTask.status}>
+        <Dropdown.Item
+          name={"Todo"}
+          onClick={() =>
+            dispatch(updateTask({ field: "status", value: "TODO" }))
+          }
+        />
+        <Dropdown.Item
+          name={"Doing"}
+          onClick={() =>
+            dispatch(updateTask({ field: "status", value: "DOING" }))
+          }
+        />
+        <Dropdown.Item
+          name={"Done"}
+          onClick={() =>
+            dispatch(updateTask({ field: "status", value: "DONE" }))
+          }
+        />
+      </Dropdown.Menu>
+      <Button type="button" onClick={() => handleCreateTask()}>
+        Create Task
+      </Button>
+    </TaskForm.Form>
+  );
+};
+
 export const Modal = {
   Window,
   View: {
     Checkout,
     Edit,
+    Add,
   },
 };

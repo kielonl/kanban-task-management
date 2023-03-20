@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { getBoardsNames } from "../../store/board/boardSlice";
+import { createTaskApi, getBoardsNames } from "../../store/board/boardSlice";
+import { TaskCreate } from "../../services";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
+import { Modal } from "../Modal/Modal";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
@@ -92,19 +94,35 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
 };
 
 const Upperbar = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const { loading, currentBoard } = useAppSelector((state) => state.board);
 
+  const dispatch = useAppDispatch();
+
   return (
-    <div className="upperbar-wrapper">
-      <div className="upperbar-container">
-        <Typography variant="XL" className="upperbar-name">
-          {loading ? <Loader /> : currentBoard.name}
-        </Typography>
-        <div className="spacer"></div>
-        <Button>+ Add New Task</Button>
-        <Icon.Ellipsis />
+    <>
+      <Modal.Window
+        title={"Add task"}
+        content={
+          <Modal.View.Add
+            board_id={currentBoard.id}
+            submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
+          />
+        }
+        isShown={showModal}
+        hide={() => setShowModal(false)}
+      />
+      <div className="upperbar-wrapper">
+        <div className="upperbar-container">
+          <Typography variant="XL" className="upperbar-name">
+            {loading ? <Loader /> : currentBoard.name}
+          </Typography>
+          <div className="spacer"></div>
+          <Button onClick={() => setShowModal(true)}>+ Add New Task</Button>
+          <Icon.Ellipsis />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -2,11 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status, SubTaskType } from "../../types";
 
 interface TaskSliceType {
-  id: string;
   title: string;
   description: string;
   status: Status;
-  column_id: string;
   subtasks: SubTaskType[];
 }
 
@@ -17,11 +15,9 @@ interface TaskState {
 
 const initialState: TaskState = {
   task: {
-    id: "",
     title: "",
     description: "",
     status: "TODO",
-    column_id: "",
     subtasks: [],
   },
   loading: false,
@@ -37,7 +33,10 @@ export const taskSlice = createSlice({
 
     updateTask: (
       state,
-      action: PayloadAction<{ field: keyof TaskSliceType; value: any }>
+      action: PayloadAction<{
+        field: keyof Omit<TaskSliceType, "id">;
+        value: any;
+      }>
     ) => {
       const { field, value } = action.payload;
       state.task[field] = value;
@@ -69,7 +68,6 @@ export const taskSlice = createSlice({
       state.task.subtasks.push({
         title: "",
         isCompleted: false,
-        task_id: state.task.id,
       });
     },
   },

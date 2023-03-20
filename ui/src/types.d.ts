@@ -7,7 +7,6 @@ export interface Core {
 export interface SubTaskType {
   title: string;
   isCompleted: boolean;
-  task_id: string;
 }
 
 export interface TaskType extends Core {

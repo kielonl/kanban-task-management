@@ -63,16 +63,15 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
     );
   });
 
-  const EditAddtView = subtasks.map((subtask, index) => {
+  const EditAddView = subtasks.map((subtask, index) => {
     return (
       <div key={index}>
         <div className="edit-subtask-container">
           <div className="form-subtask-input">
             <TextField
               label={""}
-              value={type === "edit" ? subtask.title : ""}
+              value={subtask.title}
               onChange={(e) => handleEditSubtaskTitle(index, e.target.value)}
-              onClick={() => console.log(subtask)}
             />
           </div>
           <div
@@ -88,8 +87,8 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
 
   const view = {
     checkout: checkoutView,
-    edit: EditAddtView,
-    add: EditAddtView,
+    edit: EditAddView,
+    add: EditAddView,
   };
 
   return (
