@@ -11,6 +11,8 @@ interface DropdownMenuProps
     HTMLSelectElement
   > {
   currentValue?: string;
+  icon?: JSX.Element;
+  className?: string;
 }
 
 interface DropdownItemProps {
@@ -20,13 +22,18 @@ interface DropdownItemProps {
 
 const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
   return (
-    <div role="listitem" className="dropdown-item" onClick={() => onClick()}>
+    <div role="listitem" className="dropdown-item" onClick={() => onClick}>
       {name}
     </div>
   );
 };
 
-const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
+const Menu: React.FC<DropdownMenuProps> = ({
+  currentValue,
+  children,
+  icon,
+  className,
+}) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
 
   window.addEventListener("click", (e) => {
@@ -40,14 +47,22 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   });
 
   return (
-    <div className={`dropdown-wrapper ${listOpen && "list-opened"}`}>
-      <div className="dropdown-header" onClick={() => setListOpen(!listOpen)}>
+    <div
+      onClick={() => setListOpen(!listOpen)}
+      className={`dropdown-wrapper ${listOpen && "list-opened"} ${
+        icon && "dropdown-icon"
+      } ${className ? className : ""}`}
+    >
+      <div className={`${icon ? "dropdown-header--icon" : "dropdown-header"}`}>
         <Typography variant="BodyL">
-          {currentValue || "Select an option"}
+          {icon}
+          {!icon && (currentValue || "Select an option")}
         </Typography>
-        <div className="dropdown-toggle">
-          {listOpen ? <ArrowUp /> : <ArrowDown />}
-        </div>
+        {!icon && (
+          <div className="dropdown-toggle">
+            {listOpen ? <ArrowUp /> : <ArrowDown />}
+          </div>
+        )}
       </div>
 
       {listOpen && (

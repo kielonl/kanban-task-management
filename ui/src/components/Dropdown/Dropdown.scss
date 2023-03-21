@@ -41,7 +41,7 @@ $light-gray: #2b2c37;
 
     border-radius: 8px;
     color: $gray;
-    max-height: 6em;
+    max-height: 12em;
     overflow-y: scroll;
     cursor: pointer;
     @include themify($themes) {
@@ -52,6 +52,15 @@ $light-gray: #2b2c37;
     }
   }
 }
+.dropdown-icon {
+  cursor: pointer;
+  .dropdown-header--icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 .list-opened {
   .dropdown-header {
     border: 1px solid $primary;

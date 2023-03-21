@@ -1,17 +1,7 @@
-import React, { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Form } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/hooks";
+import React, { useCallback, useEffect, useState } from "react";
+import { Icon } from "../../assets/icons/Icon";
+import { useAppSelector } from "../../hooks/hooks";
 import { TaskCreate } from "../../services";
-import { getBoardById } from "../../store/board/boardSlice";
-import {
-  addSubtask,
-  deleteSubtask,
-  setTask,
-  updateSubtask,
-  updateTask,
-} from "../../store/board/taskSlice";
-import { RootState } from "../../store/store";
 import { SubTaskType, TaskType } from "../../types";
 import { Button } from "../Button/Button";
 import Dropdown from "../Dropdown/Dropdown";
@@ -25,7 +15,7 @@ interface WindowProps {
   isShown: boolean;
   hide: () => void;
 
-  title: string;
+  title?: string;
   content?: JSX.Element;
   submit?: JSX.Element;
 }
@@ -49,9 +39,12 @@ export const Window: React.FC<WindowProps> = ({
   title,
   content,
 }) => {
+  const { loading } = useAppSelector((state) => state.board);
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") hide();
   }, []);
+
+  if (loading) hide();
 
   useEffect(() => {
     if (isShown) {
@@ -82,25 +75,52 @@ export const Window: React.FC<WindowProps> = ({
 export const Checkout: React.FC<CheckoutProps> = ({ task }) => {
   return (
     <TaskForm.Form>
+      <Typography variant="L" className="modal-checkout-title">
+        <span>{task.title}</span>
+        <Dropdown.Menu
+          className="modal-checkout-dropdown"
+          icon={<Icon.Ellipsis />}
+        >
+          <Dropdown.Item name={"Edit"} onClick={() => ""} />
+          <Dropdown.Item name={"Delete"} onClick={() => ""} />
+        </Dropdown.Menu>
+      </Typography>
       <Typography variant="BodyL">{task.description}</Typography>
       <TaskForm.ListSubTasks type="checkout" subtasks={task.subtasks} />
-      <Dropdown.Menu currentValue={task.status}></Dropdown.Menu>
+      <Dropdown.Menu currentValue={task.status}>
+        <Dropdown.Item name={"Todo"} onClick={() => ""} />
+        <Dropdown.Item name={"Doing"} onClick={() => ""} />
+        <Dropdown.Item name={"Done"} onClick={() => ""} />
+      </Dropdown.Menu>
     </TaskForm.Form>
   );
 };
 
 export const Edit: React.FC<EditProps> = ({ task, submit }) => {
-  //add some error handling here
-  const tempTask = useSelector((state: RootState) => state.task.task);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setTask({ ...task }));
-  }, []);
+  const [tempTask, setTempTask] = useState<Omit<TaskType, "id">>({ ...task });
 
   const handleSetTask = () => {
     if (!submit) return;
     submit(tempTask);
+  };
+
+  const handleDeleteSubtask = (index: number) => {
+    const newSubtasks = tempTask.subtasks.filter((_, i) => i !== index);
+    setTempTask({ ...tempTask, subtasks: newSubtasks });
+  };
+
+  const handleUpdateSubtask = (
+    index: number,
+    field: keyof SubTaskType,
+    value: any
+  ) => {
+    const newSubtasks = tempTask.subtasks.map((subtask, i) => {
+      if (i === index) {
+        return { ...subtask, [field]: value };
+      }
+      return subtask;
+    });
+    setTempTask({ ...tempTask, subtasks: newSubtasks });
   };
 
   return (
@@ -109,50 +129,47 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
         type={"text"}
         label={"title"}
         value={tempTask.title}
-        onChange={(e) =>
-          dispatch(updateTask({ field: "title", value: e.target.value }))
-        }
+        onChange={(e) => setTempTask({ ...tempTask, title: e.target.value })}
       />
       <TextArea
         label={"description"}
         value={tempTask.description}
         onChange={(e) =>
-          dispatch(updateTask({ field: "description", value: e.target.value }))
+          setTempTask({ ...tempTask, description: e.target.value })
         }
       />
       <TaskForm.ListSubTasks
         type="edit"
         subtasks={tempTask.subtasks}
         updateSubtask={(index: number, field: keyof SubTaskType, value: any) =>
-          dispatch(updateSubtask({ index, field, value }))
+          handleUpdateSubtask(index, field, value)
         }
-        deleteSubtask={(index: number) => dispatch(deleteSubtask({ index }))}
+        deleteSubtask={(index: number) => handleDeleteSubtask(index)}
       />
       <Button
         type="button"
         variant="secondary"
-        onClick={() => dispatch(addSubtask())}
+        onClick={() =>
+          setTempTask({
+            ...tempTask,
+            subtasks: [...tempTask.subtasks, { isCompleted: false, title: "" }],
+          })
+        }
       >
         Add subtask
       </Button>
       <Dropdown.Menu currentValue={tempTask.status}>
         <Dropdown.Item
           name={"Todo"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "TODO" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "TODO" })}
         />
         <Dropdown.Item
           name={"Doing"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "DOING" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "DOING" })}
         />
         <Dropdown.Item
           name={"Done"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "DONE" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "DONE" })}
         />
       </Dropdown.Menu>
       <Button type="button" onClick={() => handleSetTask()}>
@@ -163,61 +180,81 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
 };
 
 const Add: React.FC<AddProps> = ({ board_id, submit }) => {
-  const tempTask = useSelector((state: RootState) => state.task.task);
-  const dispatch = useAppDispatch();
+  const [tempTask, setTempTask] = useState<Omit<TaskType, "id">>({
+    title: "",
+    description: "",
+    status: "TODO",
+    subtasks: [],
+  });
 
   const handleCreateTask = () => {
     if (!submit) return;
     submit({ ...tempTask, board_id });
   };
 
+  const handleDeleteSubtask = (index: number) => {
+    const newSubtasks = tempTask.subtasks.filter((_, i) => i !== index);
+    setTempTask({ ...tempTask, subtasks: newSubtasks });
+  };
+
+  const handleUpdateSubtask = (
+    index: number,
+    field: keyof SubTaskType,
+    value: any
+  ) => {
+    const newSubtasks = tempTask.subtasks.map((subtask, i) => {
+      if (i === index) {
+        return { ...subtask, [field]: value };
+      }
+      return subtask;
+    });
+    setTempTask({ ...tempTask, subtasks: newSubtasks });
+  };
+
   return (
     <TaskForm.Form>
       <TextField
         label={"Title"}
-        onChange={(e) =>
-          dispatch(updateTask({ field: "title", value: e.target.value }))
-        }
+        onChange={(e) => setTempTask({ ...tempTask, title: e.target.value })}
       />
       <TextArea
         label={"Description"}
         onChange={(e) =>
-          dispatch(updateTask({ field: "description", value: e.target.value }))
+          setTempTask({ ...tempTask, description: e.target.value })
         }
       />
       <TaskForm.ListSubTasks
         type={"add"}
         subtasks={tempTask.subtasks}
         updateSubtask={(index: number, field: keyof SubTaskType, value: any) =>
-          dispatch(updateSubtask({ index, field, value }))
+          handleUpdateSubtask(index, field, value)
         }
-        deleteSubtask={(index: number) => dispatch(deleteSubtask({ index }))}
+        deleteSubtask={(index: number) => handleDeleteSubtask(index)}
       />
       <Button
         type="button"
         variant="secondary"
-        onClick={() => dispatch(addSubtask())}
+        onClick={() =>
+          setTempTask({
+            ...tempTask,
+            subtasks: [...tempTask.subtasks, { isCompleted: false, title: "" }],
+          })
+        }
       >
         + Add New Subtask
       </Button>
       <Dropdown.Menu currentValue={tempTask.status}>
         <Dropdown.Item
           name={"Todo"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "TODO" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "TODO" })}
         />
         <Dropdown.Item
           name={"Doing"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "DOING" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "DOING" })}
         />
         <Dropdown.Item
           name={"Done"}
-          onClick={() =>
-            dispatch(updateTask({ field: "status", value: "DONE" }))
-          }
+          onClick={() => setTempTask({ ...tempTask, status: "DONE" })}
         />
       </Dropdown.Menu>
       <Button type="button" onClick={() => handleCreateTask()}>

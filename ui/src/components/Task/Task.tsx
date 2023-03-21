@@ -8,7 +8,7 @@ import { Typography } from "../Typography/Typography";
 import "./Task.scss";
 
 export const Task: React.FC<TaskType> = ({ ...data }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(true);
   const { title, subtasks } = data;
 
   const doneSubtasks: number = subtasks.filter(
@@ -16,14 +16,14 @@ export const Task: React.FC<TaskType> = ({ ...data }) => {
   ).length;
 
   const dispatch = useAppDispatch();
+
   return (
     <>
       <Modal.Window
-        title={"edit task"}
         content={
-          <Modal.View.Edit
+          <Modal.View.Checkout
             task={{ ...data }}
-            submit={(obj) => dispatch(updateTaskApi(obj))}
+            // submit={(obj) => dispatch(updateTaskApi(obj))}
           />
         }
         isShown={showModal}

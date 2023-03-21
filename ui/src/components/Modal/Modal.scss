@@ -30,12 +30,22 @@ $dark-gray: #2b2c37;
     padding: 1.5rem;
     padding-bottom: 0;
   }
+
   .modal-content {
     width: 100%;
   }
 
-  // .modal-button-container {
-  //   display: flex;
-  //   justify-content: flex-end;
-  // }
+  .modal-checkout-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    & > span {
+      width: 100%;
+    }
+    .modal-checkout-dropdown {
+      width: 30%;
+    }
+  }
 }

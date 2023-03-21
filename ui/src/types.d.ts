@@ -13,7 +13,7 @@ export interface TaskType extends Core {
   title: string;
   description: string;
   status: Status;
-  column_id: string;
+  // column_id: string;
   subtasks: SubTaskType[];
 }
 

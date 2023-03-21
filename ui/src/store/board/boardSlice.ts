@@ -44,7 +44,7 @@ export const getBoardsNames = createAsyncThunk(
 
 export const getBoardById = createAsyncThunk(
   "boards/getBoardById",
-  async (id: string) => {
+  async (id: string, { getState }) => {
     return getOne(ENDPOINT.BOARDS, id);
   }
 );
@@ -75,14 +75,25 @@ export const updateBoard = createAsyncThunk(
 
 export const updateTaskApi = createAsyncThunk(
   "task/updateTask",
-  async (task: TaskType) => {
+  async (task: TaskType, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    if (
+      Object.values(task).some((value) => value === "") ||
+      Object.values(task).some((value) => value === null)
+    ) {
+      return;
+    }
     await update(ENDPOINT.TASKS, task.id, task);
+    return getOne(ENDPOINT.BOARDS, boardId);
   }
 );
 
 export const createTaskApi = createAsyncThunk(
   "task/createTask",
-  async (task: TaskCreate) => {
+  async (task: TaskCreate, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
     //move this to some better place
     if (
       Object.values(task).some((value) => value === "") ||
@@ -91,6 +102,7 @@ export const createTaskApi = createAsyncThunk(
       return;
     }
     await create(ENDPOINT.TASKS, task);
+    return getOne(ENDPOINT.BOARDS, boardId);
   }
 );
 
@@ -158,7 +170,8 @@ export const boardSlice = createSlice({
     builder.addCase(updateTaskApi.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(updateTaskApi.fulfilled, (state) => {
+    builder.addCase(updateTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
       state.loading = false;
     });
     builder.addCase(updateTaskApi.rejected, (state) => {
@@ -168,7 +181,8 @@ export const boardSlice = createSlice({
     builder.addCase(createTaskApi.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(createTaskApi.fulfilled, (state) => {
+    builder.addCase(createTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
       state.loading = false;
     });
     builder.addCase(createTaskApi.rejected, (state) => {

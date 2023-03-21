@@ -8,6 +8,7 @@ $medium-gray: #828fa3;
 
 .main-board {
   height: 100%;
+  overflow-x: scroll;
   padding: 2rem;
   @include themify($themes) {
     background: themed("backgroundSecondary");
@@ -15,6 +16,9 @@ $medium-gray: #828fa3;
   }
 
   color: $medium-gray;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
 }
 
 .main-board-empty {
