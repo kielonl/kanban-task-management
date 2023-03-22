@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu } from "../components/Menu/Menu";
 import { Board } from "./Board";
-import "./Main.scss";
+import "./Root.scss";
 
 export const Root = () => {
   const [showSidebar, setShowSidebar] = useState<boolean>(true);

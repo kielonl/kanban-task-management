@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { Typography } from "../Typography/Typography";
 import "./TextField.scss";
 
@@ -16,7 +17,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   ...props
 }) => {
   return (
-    <label className={`input-wrapper ${error && "input-error"}`}>
+    <label className={classNames("input-wrapper", error && "input-error")}>
       <div className="input-label">
         <Typography variant="BodyM">{label}</Typography>
       </div>

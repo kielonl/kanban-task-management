@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Column } from "../components/Column/Column";
@@ -19,9 +20,10 @@ export const Board = () => {
 
   return (
     <div
-      className={`main-board ${
+      className={classNames(
+        "main-board",
         !currentBoard.columns.length && "main-board-empty"
-      }`}
+      )}
     >
       {loading.currentBoard ? (
         <Loader />

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import "./Typography.scss";
 
 type Variant = "XL" | "L" | "M" | "S" | "BodyL" | "BodyM";
@@ -28,7 +29,7 @@ export const Typography: React.FC<TypographyProps> = ({
 
   return (
     <Component
-      className={`typography--variant-${variant} ${className}`}
+      className={classNames(`typography--variant-${variant}`, className)}
       {...props}
     >
       {children}

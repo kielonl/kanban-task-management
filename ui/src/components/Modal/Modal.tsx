@@ -289,6 +289,7 @@ export const Delete: React.FC<DeleteProps> = ({ item, submit }) => {
   };
 
   const handleCancel = () => {
+    //implement cancel
     console.log("cancel");
   };
 

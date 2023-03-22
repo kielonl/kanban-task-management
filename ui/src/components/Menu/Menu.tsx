@@ -12,6 +12,7 @@ import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
 import "./Menu.scss";
+import classNames from "classnames";
 
 interface SidebarProps {
   isShown: boolean;
@@ -45,7 +46,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
   return (
     <>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
-      <div className={`sidebar-wrapper ${!isShown && "sidebar-hidden"}`}>
+      <div
+        className={classNames("sidebar-wrapper", !isShown && "sidebar-hidden")}
+      >
         <div className="sidebar-container">
           <div className="sidebar-logo">
             <Logo />
@@ -60,9 +63,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
                 <Link to={`/board/${board.id}`} key={index}>
                   <Typography
                     variant="M"
-                    className={`sidebar-board ${
+                    className={classNames(
+                      "sidebar-board",
                       board.id === currentBoard.id && "sidebar-board-selected"
-                    }`}
+                    )}
                     key={board.id}
                   >
                     <Icon.Board />

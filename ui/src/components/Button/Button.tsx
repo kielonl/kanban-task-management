@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import "./Button.scss";
 
 interface ButtonProps
@@ -18,9 +19,11 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       {...props}
-      className={`button button-${size || "small"} button-${
-        variant || "primary"
-      }`}
+      className={classNames(
+        "button",
+        `button-${size || "small"}`,
+        `button-${variant || "primary"}`
+      )}
     >
       {children}
     </button>
