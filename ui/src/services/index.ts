@@ -14,6 +14,14 @@ interface TaskApi
 interface SubTaskApi
   extends Omit<SubTaskType, "created_at" | "updated_at" | "id"> {}
 
+export interface TaskCreate {
+  title: string;
+  description: string;
+  status: string;
+  board_id: string;
+  subtasks: SubTaskType[];
+}
+
 export const getAll = async (endpoint: ENDPOINT) => {
   const response = await callApi(HTTP_METHOD.GET, endpoint);
   return response.data;
@@ -23,9 +31,10 @@ export const getOne = async (endpoint: ENDPOINT, id: string) => {
   const response = await callApi(HTTP_METHOD.GET, `${endpoint}/${id}`);
   return response.data;
 };
+
 export const create = async (
   endpoint: ENDPOINT,
-  data: BoardApi | ColumnApi | TaskApi | SubTaskApi
+  data: BoardApi | ColumnApi | TaskApi | TaskCreate | SubTaskApi
 ) => {
   const response = await callApi(HTTP_METHOD.POST, endpoint, data);
   return response.data;

@@ -1,0 +1,22 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem;
+}
+
+.edit-subtask-container {
+  display: flex;
+  flex-direction: row;
+  .form-subtask-input {
+    width: 90%;
+  }
+  //this class should thake up the whole row
+  .form-subtask-delete {
+    display: grid;
+    place-content: center;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}

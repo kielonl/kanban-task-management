@@ -1,12 +1,22 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAll, create, remove, update } from "../../services";
-import { BoardType } from "../../types";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  getAll,
+  create,
+  remove,
+  update,
+  getOne,
+  TaskCreate,
+} from "../../services";
+import { BoardType, TaskType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
-interface BorderState {
-  boards: BoardType[];
-  currentBoard: { name: string; id: string };
-  loading: boolean;
+interface BoardState {
+  boards: Omit<BoardType[], "created_at" | "updated_at" | "columns">;
+  currentBoard: BoardType;
+  loading: {
+    boards: boolean;
+    currentBoard: boolean;
+  };
 }
 
 //change later
@@ -14,15 +24,36 @@ interface BoardCreate {
   name: string;
 }
 
-const initialState: BorderState = {
+const initialState: BoardState = {
   boards: [],
-  currentBoard: { name: "", id: "" },
-  loading: true,
+  currentBoard: {
+    name: "",
+    id: "",
+    columns: [],
+  },
+  loading: {
+    boards: false,
+    currentBoard: false,
+  },
 };
 
 export const getBoards = createAsyncThunk("boards/getBoards", async () => {
   return getAll(ENDPOINT.BOARDS);
 });
+
+export const getBoardsNames = createAsyncThunk(
+  "boards/getBoardsNames",
+  async () => {
+    return getAll(ENDPOINT.BOARDS_NAMES);
+  }
+);
+
+export const getBoardById = createAsyncThunk(
+  "boards/getBoardById",
+  async (id: string, { getState }) => {
+    return getOne(ENDPOINT.BOARDS, id);
+  }
+);
 
 export const addBoard = createAsyncThunk(
   "boards/createBoard",
@@ -48,65 +79,145 @@ export const updateBoard = createAsyncThunk(
   }
 );
 
+export const updateTaskApi = createAsyncThunk(
+  "task/updateTask",
+  async (task: TaskType, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    if (
+      Object.values(task).some((value) => value === "") ||
+      Object.values(task).some((value) => value === null)
+    ) {
+      return;
+    }
+    await update(ENDPOINT.TASKS, task.id, task);
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
+export const createTaskApi = createAsyncThunk(
+  "task/createTask",
+  async (task: TaskCreate, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    //move this to some better place
+    if (
+      Object.values(task).some((value) => value === "") ||
+      Object.values(task).some((value) => value === null)
+    ) {
+      return;
+    }
+    await create(ENDPOINT.TASKS, task);
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
+export const deleteTaskApi = createAsyncThunk(
+  "task/deleteTask",
+  async (taskId: string, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    await remove(ENDPOINT.TASKS, taskId);
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
-  reducers: {
-    setCurrentBoard: (
-      state,
-      action: PayloadAction<{ name: string; id: string }>
-    ) => {
-      state.currentBoard = { ...action.payload };
-    },
-  },
-  extraReducers: {
-    [getBoards.pending.type]: (state) => {
-      state.loading = true;
-    },
-    [getBoards.fulfilled.type]: (state, action) => {
-      state.boards = [...action.payload];
-      state.currentBoard = { ...(action.payload[0] || { name: "", id: "" }) };
-      state.loading = false;
-    },
-    [getBoards.rejected.type]: (state) => {
-      state.loading = false;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getBoardById.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(getBoardById.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(getBoardById.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
 
-    [addBoard.pending.type]: (state) => {
-      state.loading = true;
-    },
-    [addBoard.fulfilled.type]: (state, action) => {
+    builder.addCase(getBoardsNames.pending, (state) => {
+      state.loading.boards = true;
+    });
+    builder.addCase(getBoardsNames.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
-    },
-    [addBoard.rejected.type]: (state) => {
-      state.loading = false;
-    },
+      state.loading.boards = false;
+    });
+    builder.addCase(getBoardsNames.rejected, (state) => {
+      state.loading.boards = false;
+    });
 
-    [deleteBoard.pending.type]: (state) => {
-      state.loading = true;
-    },
-    [deleteBoard.fulfilled.type]: (state, action) => {
+    builder.addCase(addBoard.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(addBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
-    },
-    [deleteBoard.rejected.type]: (state) => {
-      state.loading = false;
-    },
+      state.loading.currentBoard = false;
+    });
 
-    [updateBoard.pending.type]: (state) => {
-      state.loading = true;
-    },
-    [updateBoard.fulfilled.type]: (state, action) => {
+    builder.addCase(addBoard.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(deleteBoard.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(deleteBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
-    },
-    [updateBoard.rejected.type]: (state) => {
-      state.loading = false;
-    },
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(deleteBoard.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateBoard.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(updateBoard.fulfilled, (state, action) => {
+      state.boards = [...action.payload];
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(updateBoard.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateTaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(updateTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(updateTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(createTaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(createTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(createTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(deleteTaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(deleteTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(deleteTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
   },
 });
 
-export const { setCurrentBoard } = boardSlice.actions;
+export const {} = boardSlice.actions;
 
 export default boardSlice.reducer;

@@ -29,13 +29,7 @@ export const Column: React.FC<ColumnProps> = ({ name, tasks }) => {
       </Typography>
       <div className="column-tasks">
         {tasks.map((task: TaskType) => {
-          return (
-            <Task
-              {...task}
-              setTask={() => console.log("this is a test")}
-              key={task.id}
-            />
-          );
+          return <Task {...task} key={task.id} />;
         })}
       </div>
     </div>

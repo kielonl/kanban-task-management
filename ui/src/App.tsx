@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ThemeContext } from "./contexts/ThemeContext";
-import { Main } from "./Views/Main";
+import { Root } from "./Views/Root";
 import "./App.scss";
 import { Provider } from "react-redux";
 import { rootStore } from "./store/store";
@@ -12,7 +12,7 @@ function App() {
       <ThemeContext.Provider value={{ theme, setTheme }}>
         <div className={`theme-${theme}`}>
           <div className="App">
-            <Main />
+            <Root />
           </div>
         </div>
       </ThemeContext.Provider>

@@ -20,6 +20,9 @@ $medium-gray: #828fa3;
     .upperbar-name {
       padding: 2rem;
     }
+    button {
+      width: 170px;
+    }
   }
 }
 
@@ -56,6 +59,9 @@ $medium-gray: #828fa3;
       flex-direction: column;
       height: 100%;
       overflow-y: auto;
+      a {
+        text-decoration: none;
+      }
 
       & > *:first-child,
       & > *:last-child {

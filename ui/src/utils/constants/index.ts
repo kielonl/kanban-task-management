@@ -7,6 +7,7 @@ export enum HTTP_METHOD {
 
 export enum ENDPOINT {
   BOARDS = "/board",
+  BOARDS_NAMES = "/board/names",
   COLUMNS = "/column",
   TASKS = "/task",
   SUBTASKS = "/subtask",

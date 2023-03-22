@@ -1,7 +1,10 @@
+import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
+import { Typography } from "../Typography/Typography";
+
 import "./Dropdown.scss";
 
 interface DropdownMenuProps
@@ -10,6 +13,8 @@ interface DropdownMenuProps
     HTMLSelectElement
   > {
   currentValue?: string;
+  icon?: JSX.Element;
+  className?: string;
 }
 
 interface DropdownItemProps {
@@ -25,7 +30,12 @@ const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
   );
 };
 
-const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
+const Menu: React.FC<DropdownMenuProps> = ({
+  currentValue,
+  children,
+  icon,
+  className,
+}) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
 
   window.addEventListener("click", (e) => {
@@ -39,18 +49,35 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   });
 
   return (
-    <div className={`dropdown-wrapper ${listOpen && "list-opened"}`}>
-      <div className="dropdown-header" onClick={() => setListOpen(!listOpen)}>
-        {currentValue || "Select an option"}
-        <div className="dropdown-toggle">
-          {listOpen ? <ArrowUp /> : <ArrowDown />}
-        </div>
+    <div
+      onClick={() => setListOpen(!listOpen)}
+      className={classNames(
+        "dropdown-wrapper",
+        listOpen && "list-opened",
+        icon && "dropdown-icon",
+        className
+      )}
+    >
+      <div
+        className={classNames(
+          icon ? "dropdown-header--icon" : "dropdown-header"
+        )}
+      >
+        <Typography variant="BodyL">
+          {icon}
+          {!icon && (currentValue || "Select an option")}
+        </Typography>
+        {!icon && (
+          <div className="dropdown-toggle">
+            {listOpen ? <ArrowUp /> : <ArrowDown />}
+          </div>
+        )}
       </div>
 
       {listOpen && (
-        <div role="list" className="dropdown-list">
+        <Typography variant="BodyM" role="list" className="dropdown-list">
           {children}
-        </div>
+        </Typography>
       )}
     </div>
   );

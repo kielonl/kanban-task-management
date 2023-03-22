@@ -1,3 +1,4 @@
+import { Typography } from "../Typography/Typography";
 import "./Checkbox.scss";
 
 interface CheckboxProps
@@ -30,7 +31,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         onChange={() => setChecked()}
         {...props}
       />
-      <div>{label}</div>
+      <Typography variant="BodyM" className="checkbox-label">
+        {label}
+      </Typography>
     </label>
   );
 };

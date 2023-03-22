@@ -1,25 +1,33 @@
+@import "../../styles/ThemeVariables.scss";
 $red: #ea5555;
+
 $gray: #828fa3;
 $dark-gray: #2b2c37;
 .input-wrapper {
   position: relative;
 
   input {
+    @include themify($themes) {
+      color: themed("colorText");
+      transition: themed("transition");
+    }
+    background: transparent;
     font-size: 15px;
-    border: 1px solid $gray;
+    border: 1px solid rgba(#828fa3, 25%);
     border-radius: 4px;
-    padding: 0.5rem;
+    padding: 0.5rem 0.3rem;
+    margin-right: 0.3rem;
     width: 100%;
-    background: white;
-    color: black;
   }
   input:focus {
     outline: none;
   }
-
-  .input-dark {
-    background: $dark-gray;
-    color: white;
+  .input-label {
+    @include themify($themes) {
+      color: themed("colorTextSecondary");
+    }
+    text-transform: capitalize;
+    margin-bottom: 0.3rem;
   }
 }
 

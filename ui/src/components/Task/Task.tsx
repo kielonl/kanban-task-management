@@ -1,73 +1,61 @@
 import { useState } from "react";
-import { TaskProps, Tasks } from "../../types";
-import { Checkbox } from "../Checkbox/Checkbox";
-import Dropdown from "../Dropdown/Dropdown";
+import { useAppDispatch } from "../../hooks/hooks";
+import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
+import { TaskType } from "../../types";
 import { Modal } from "../Modal/Modal";
 import { Typography } from "../Typography/Typography";
+
 import "./Task.scss";
 
-export const Task: React.FC<TaskProps> = ({ setTask, ...data }) => {
-  const { title, description, status, subtasks } = data;
+type ModalContentType = "checkout" | "edit" | "delete";
+
+export const Task: React.FC<TaskType> = ({ ...data }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalContent, setModalContent] =
+    useState<ModalContentType>("checkout");
+  const { title, subtasks } = data;
 
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
   ).length;
 
-  const updateTask = (field: keyof Tasks, value: any) => {
-    setTask((prev: Tasks[]) => {
-      return prev.map((task) => {
-        if (task.id === data.id) {
-          return { ...task, [field]: value };
-        }
-        return task;
-      });
-    });
+  const dispatch = useAppDispatch();
+
+  const handleHide = () => {
+    setShowModal(false);
+    setModalContent("checkout");
   };
 
-  const setChecked = (index: number) => {
-    const newSubtasks = [...subtasks];
-    newSubtasks[index].isCompleted = !newSubtasks[index].isCompleted;
-    updateTask("subtasks", newSubtasks);
+  const modalContents = {
+    checkout: (
+      <Modal.View.Checkout
+        task={{ ...data }}
+        changeModalContent={(content: ModalContentType) =>
+          setModalContent(content)
+        }
+      />
+    ),
+    edit: (
+      <Modal.View.Edit
+        task={{ ...data }}
+        submit={(obj) => dispatch(updateTaskApi(obj))}
+      />
+    ),
+    delete: (
+      <Modal.View.Delete
+        item={{ name: title, type: "task" }}
+        submit={() => dispatch(deleteTaskApi(data.id))}
+      />
+    ),
   };
 
   return (
     <>
-      {/* not sure about it, might delete later */}
-      <Modal isShown={showModal} hide={() => setShowModal(false)}>
-        <div className="task-modal-container">
-          <Typography variant="L">{title}</Typography>
-          <Typography variant="BodyL" className="task-modal-description">
-            {description}
-          </Typography>
-          <Typography variant="BodyM" className="task-modal-subtasks-done">
-            Subtasks ({doneSubtasks} of {subtasks.length})
-          </Typography>
-          {subtasks.map((subtask, index) => (
-            <Checkbox
-              label={subtask.title}
-              isChecked={subtask.isCompleted}
-              setChecked={() => setChecked(index)}
-              id={String(index)}
-              key={index}
-            />
-          ))}
-          <Dropdown.Menu currentValue={status}>
-            <Dropdown.Item
-              name={"Todo"}
-              onClick={() => updateTask("status", "todo")}
-            />
-            <Dropdown.Item
-              name={"Doing"}
-              onClick={() => updateTask("status", "doing")}
-            />
-            <Dropdown.Item
-              name={"Done"}
-              onClick={() => updateTask("status", "done")}
-            />
-          </Dropdown.Menu>
-        </div>
-      </Modal>
+      <Modal.Window
+        content={modalContents[modalContent]}
+        isShown={showModal}
+        hide={() => handleHide()}
+      />
 
       <div className="task-wrapper" onClick={() => setShowModal(true)}>
         <Typography variant="M" className="task-title">

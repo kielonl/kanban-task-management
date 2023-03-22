@@ -2,6 +2,8 @@ $themes: (
   light: (
     background: white,
     backgroundSecondary: #f4f7fd,
+    buttonSecondary: #f4f7fd,
+    buttonSecondaryHover: rgba(#635fc7, 0.25),
     colorText: black,
     colorTextSecondary: #828fa3,
     colorPrimary: #635fc7,
@@ -11,6 +13,8 @@ $themes: (
   dark: (
     background: #2b2c37,
     backgroundSecondary: #20212c,
+    buttonSecondary: white,
+    buttonSecondaryHover: white,
     colorText: white,
     colorTextSecondary: #828fa3,
     colorPrimary: #635fc7,
