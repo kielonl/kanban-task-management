@@ -59,6 +59,11 @@ $light-gray: #2b2c37;
     justify-content: center;
     align-items: center;
   }
+  .dropdown-list {
+    min-width: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .list-opened {

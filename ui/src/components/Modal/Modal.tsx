@@ -11,6 +11,8 @@ import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
 import "./Modal.scss";
 
+type ModalContentType = "checkout" | "edit" | "delete";
+
 interface WindowProps {
   isShown: boolean;
   hide: () => void;
@@ -22,15 +24,25 @@ interface WindowProps {
 
 interface CheckoutProps {
   task: TaskType;
+  changeModalContent: (content: ModalContentType) => void;
 }
 
-interface EditProps extends CheckoutProps {
+interface EditProps {
+  task: TaskType;
   submit?: (obj: any) => void;
 }
 
 interface AddProps {
   submit?: (obj: TaskCreate) => void;
   board_id: string;
+}
+
+interface DeleteProps {
+  item: {
+    name: string;
+    type: string;
+  };
+  submit?: () => void;
 }
 
 export const Window: React.FC<WindowProps> = ({
@@ -44,7 +56,7 @@ export const Window: React.FC<WindowProps> = ({
     if (event.key === "Escape") hide();
   }, []);
 
-  if (loading) hide();
+  if (loading.currentBoard) hide();
 
   useEffect(() => {
     if (isShown) {
@@ -54,7 +66,6 @@ export const Window: React.FC<WindowProps> = ({
       };
     }
   }, [handleKeyPress, isShown]);
-
   return (
     <>
       {isShown && (
@@ -72,19 +83,26 @@ export const Window: React.FC<WindowProps> = ({
   );
 };
 
-export const Checkout: React.FC<CheckoutProps> = ({ task }) => {
+export const Checkout: React.FC<CheckoutProps> = ({
+  task,
+  changeModalContent,
+}) => {
+  const handleChange = (content: ModalContentType) => {
+    changeModalContent(content);
+  };
+
   return (
     <TaskForm.Form>
       <Typography variant="L" className="modal-checkout-title">
-        <span>{task.title}</span>
-        <Dropdown.Menu
-          className="modal-checkout-dropdown"
-          icon={<Icon.Ellipsis />}
-        >
-          <Dropdown.Item name={"Edit"} onClick={() => ""} />
-          <Dropdown.Item name={"Delete"} onClick={() => ""} />
-        </Dropdown.Menu>
+        {task.title}
       </Typography>
+      <Dropdown.Menu
+        className="modal-checkout-dropdown"
+        icon={<Icon.Ellipsis />}
+      >
+        <Dropdown.Item name={"Edit"} onClick={() => handleChange("edit")} />
+        <Dropdown.Item name={"Delete"} onClick={() => handleChange("delete")} />
+      </Dropdown.Menu>
       <Typography variant="BodyL">{task.description}</Typography>
       <TaskForm.ListSubTasks type="checkout" subtasks={task.subtasks} />
       <Dropdown.Menu currentValue={task.status}>
@@ -264,11 +282,49 @@ const Add: React.FC<AddProps> = ({ board_id, submit }) => {
   );
 };
 
+export const Delete: React.FC<DeleteProps> = ({ item, submit }) => {
+  const handleDelete = () => {
+    if (!submit) return;
+    submit();
+  };
+
+  const handleCancel = () => {
+    console.log("cancel");
+  };
+
+  return (
+    <TaskForm.Form>
+      <Typography variant="L">Delete this {item.type}</Typography>
+      <Typography variant="BodyL">
+        Are you sure you want to delete the '{item.name}' board? This action
+        will remove all columns and tasks and cannot be reversed.
+      </Typography>
+      <div className="delete-buttons">
+        <Button
+          type="button"
+          variant="destructive"
+          onClick={() => handleDelete()}
+        >
+          Delete
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => handleCancel()}
+        >
+          Cancel
+        </Button>
+      </div>
+    </TaskForm.Form>
+  );
+};
+
 export const Modal = {
   Window,
   View: {
     Checkout,
     Edit,
     Add,
+    Delete,
   },
 };

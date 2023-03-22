@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           <div className="sidebar-boards">
             <Typography variant="S">ALL BOARDS ({boards.length})</Typography>
 
-            {loading ? (
+            {loading.boards ? (
               <Loader />
             ) : (
               boards.map((board, index: number) => (
@@ -94,6 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
 };
 
 const Upperbar = () => {
+  //fix browser error related to this state later
   const [showModal, setShowModal] = useState<boolean>(false);
   const { loading, currentBoard } = useAppSelector((state) => state.board);
 
@@ -115,7 +116,7 @@ const Upperbar = () => {
       <div className="upperbar-wrapper">
         <div className="upperbar-container">
           <Typography variant="XL" className="upperbar-name">
-            {loading ? <Loader /> : currentBoard.name}
+            {loading.boards ? <Loader /> : currentBoard.name}
           </Typography>
           <div className="spacer"></div>
           <Button onClick={() => setShowModal(true)}>+ Add New Task</Button>

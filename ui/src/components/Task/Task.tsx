@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
-import { updateTaskApi } from "../../store/board/boardSlice";
+import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
 import { TaskType } from "../../types";
 import { Modal } from "../Modal/Modal";
 import { Typography } from "../Typography/Typography";
 
 import "./Task.scss";
 
+type ModalContentType = "checkout" | "edit" | "delete";
+
 export const Task: React.FC<TaskType> = ({ ...data }) => {
-  const [showModal, setShowModal] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalContent, setModalContent] =
+    useState<ModalContentType>("checkout");
   const { title, subtasks } = data;
 
   const doneSubtasks: number = subtasks.filter(
@@ -17,17 +21,40 @@ export const Task: React.FC<TaskType> = ({ ...data }) => {
 
   const dispatch = useAppDispatch();
 
+  const handleHide = () => {
+    setShowModal(false);
+    setModalContent("checkout");
+  };
+
+  const modalContents = {
+    checkout: (
+      <Modal.View.Checkout
+        task={{ ...data }}
+        changeModalContent={(content: ModalContentType) =>
+          setModalContent(content)
+        }
+      />
+    ),
+    edit: (
+      <Modal.View.Edit
+        task={{ ...data }}
+        submit={(obj) => dispatch(updateTaskApi(obj))}
+      />
+    ),
+    delete: (
+      <Modal.View.Delete
+        item={{ name: title, type: "task" }}
+        submit={() => dispatch(deleteTaskApi(data.id))}
+      />
+    ),
+  };
+
   return (
     <>
       <Modal.Window
-        content={
-          <Modal.View.Checkout
-            task={{ ...data }}
-            // submit={(obj) => dispatch(updateTaskApi(obj))}
-          />
-        }
+        content={modalContents[modalContent]}
         isShown={showModal}
-        hide={() => setShowModal(false)}
+        hide={() => handleHide()}
       />
 
       <div className="task-wrapper" onClick={() => setShowModal(true)}>

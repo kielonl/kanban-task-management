@@ -27,7 +27,7 @@ $dark-gray: #2b2c37;
   .modal-title {
     font-size: 1.5rem;
     font-weight: 600;
-    padding: 1.5rem;
+    padding: 0.5rem;
     padding-bottom: 0;
   }
 
@@ -44,8 +44,19 @@ $dark-gray: #2b2c37;
     & > span {
       width: 100%;
     }
-    .modal-checkout-dropdown {
-      width: 30%;
-    }
+  }
+  .modal-checkout-dropdown {
+    position: absolute;
+    top: 15%;
+    right: 0;
+    width: 10%;
+
+    z-index: 2;
+  }
+  .delete-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
   }
 }

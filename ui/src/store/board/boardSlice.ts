@@ -13,7 +13,10 @@ import { ENDPOINT } from "../../utils/constants";
 interface BoardState {
   boards: Omit<BoardType[], "created_at" | "updated_at" | "columns">;
   currentBoard: BoardType;
-  loading: boolean;
+  loading: {
+    boards: boolean;
+    currentBoard: boolean;
+  };
 }
 
 //change later
@@ -28,7 +31,10 @@ const initialState: BoardState = {
     id: "",
     columns: [],
   },
-  loading: true,
+  loading: {
+    boards: false,
+    currentBoard: false,
+  },
 };
 
 export const getBoards = createAsyncThunk("boards/getBoards", async () => {
@@ -106,87 +112,108 @@ export const createTaskApi = createAsyncThunk(
   }
 );
 
+export const deleteTaskApi = createAsyncThunk(
+  "task/deleteTask",
+  async (taskId: string, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    await remove(ENDPOINT.TASKS, taskId);
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getBoardById.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(getBoardById.fulfilled, (state, action) => {
       state.currentBoard = { ...action.payload.board };
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
     builder.addCase(getBoardById.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(getBoardsNames.pending, (state) => {
-      state.loading = true;
+      state.loading.boards = true;
     });
     builder.addCase(getBoardsNames.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
+      state.loading.boards = false;
     });
     builder.addCase(getBoardsNames.rejected, (state) => {
-      state.loading = false;
+      state.loading.boards = false;
     });
 
     builder.addCase(addBoard.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(addBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(addBoard.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(deleteBoard.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(deleteBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
     builder.addCase(deleteBoard.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(updateBoard.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(updateBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
     builder.addCase(updateBoard.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(updateTaskApi.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(updateTaskApi.fulfilled, (state, action) => {
       state.currentBoard = { ...action.payload.board };
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
     builder.addCase(updateTaskApi.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
 
     builder.addCase(createTaskApi.pending, (state) => {
-      state.loading = true;
+      state.loading.currentBoard = true;
     });
     builder.addCase(createTaskApi.fulfilled, (state, action) => {
       state.currentBoard = { ...action.payload.board };
-      state.loading = false;
+      state.loading.currentBoard = false;
     });
     builder.addCase(createTaskApi.rejected, (state) => {
-      state.loading = false;
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(deleteTaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(deleteTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(deleteTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
     });
   },
 });

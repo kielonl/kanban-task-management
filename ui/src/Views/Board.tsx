@@ -23,7 +23,7 @@ export const Board = () => {
         !currentBoard.columns.length && "main-board-empty"
       }`}
     >
-      {loading ? (
+      {loading.currentBoard ? (
         <Loader />
       ) : (
         currentBoard.columns.map((column) => {

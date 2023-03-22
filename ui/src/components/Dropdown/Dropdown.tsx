@@ -1,8 +1,10 @@
+import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
 import { Typography } from "../Typography/Typography";
+
 import "./Dropdown.scss";
 
 interface DropdownMenuProps
@@ -22,7 +24,7 @@ interface DropdownItemProps {
 
 const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
   return (
-    <div role="listitem" className="dropdown-item" onClick={() => onClick}>
+    <div role="listitem" className="dropdown-item" onClick={() => onClick()}>
       {name}
     </div>
   );
@@ -49,11 +51,18 @@ const Menu: React.FC<DropdownMenuProps> = ({
   return (
     <div
       onClick={() => setListOpen(!listOpen)}
-      className={`dropdown-wrapper ${listOpen && "list-opened"} ${
-        icon && "dropdown-icon"
-      } ${className ? className : ""}`}
+      className={classNames(
+        "dropdown-wrapper",
+        listOpen && "list-opened",
+        icon && "dropdown-icon",
+        className
+      )}
     >
-      <div className={`${icon ? "dropdown-header--icon" : "dropdown-header"}`}>
+      <div
+        className={classNames(
+          icon ? "dropdown-header--icon" : "dropdown-header"
+        )}
+      >
         <Typography variant="BodyL">
           {icon}
           {!icon && (currentValue || "Select an option")}
