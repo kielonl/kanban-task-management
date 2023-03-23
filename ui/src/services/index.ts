@@ -53,3 +53,12 @@ export const update = async (
   const response = await callApi(HTTP_METHOD.PUT, `${endpoint}/${id}`, data);
   return response.data;
 };
+
+export const move = async (
+  endpoint: ENDPOINT,
+  id: string,
+  data: { boardId: string; oldColumn: string; newColumn: string }
+) => {
+  const response = await callApi(HTTP_METHOD.PUT, `${endpoint}/${id}`, data);
+  return response.data;
+};
