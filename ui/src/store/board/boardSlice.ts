@@ -6,6 +6,7 @@ import {
   update,
   getOne,
   TaskCreate,
+  move,
 } from "../../services";
 import { BoardType, TaskType } from "../../types";
 import { ENDPOINT } from "../../utils/constants";
@@ -122,6 +123,27 @@ export const deleteTaskApi = createAsyncThunk(
   }
 );
 
+export const moveTaskApi = createAsyncThunk(
+  "task/moveTask",
+  async (
+    {
+      id,
+      oldColumn,
+      newColumn,
+    }: {
+      id: string;
+      oldColumn: string;
+      newColumn: string;
+    },
+    { getState }
+  ) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    await move(ENDPOINT.MOVE, id, { boardId, oldColumn, newColumn });
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
@@ -213,6 +235,17 @@ export const boardSlice = createSlice({
       state.loading.currentBoard = false;
     });
     builder.addCase(deleteTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(moveTaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(moveTaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(moveTaskApi.rejected, (state) => {
       state.loading.currentBoard = false;
     });
   },

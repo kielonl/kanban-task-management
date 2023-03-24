@@ -10,5 +10,6 @@ export enum ENDPOINT {
   BOARDS_NAMES = "/board/names",
   COLUMNS = "/column",
   TASKS = "/task",
+  MOVE = "/task/move",
   SUBTASKS = "/subtask",
 }

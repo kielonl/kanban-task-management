@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
+import { useTaskDragAndDrop } from "../../hooks/useTaskDragAndDrop";
 import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
-import { TaskType } from "../../types";
+import { TaskProps } from "../../types";
 import { Modal } from "../Modal/Modal";
 import { Typography } from "../Typography/Typography";
 
@@ -9,17 +10,17 @@ import "./Task.scss";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
-export const Task: React.FC<TaskType> = ({ ...data }) => {
+export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalContent, setModalContent] =
     useState<ModalContentType>("checkout");
-  const { title, subtasks } = data;
+  const { title, subtasks } = task;
+
+  const dispatch = useAppDispatch();
 
   const doneSubtasks: number = subtasks.filter(
     (subtask) => subtask.isCompleted
   ).length;
-
-  const dispatch = useAppDispatch();
 
   const handleHide = () => {
     setShowModal(false);
@@ -29,7 +30,7 @@ export const Task: React.FC<TaskType> = ({ ...data }) => {
   const modalContents = {
     checkout: (
       <Modal.View.Checkout
-        task={{ ...data }}
+        task={{ ...task }}
         changeModalContent={(content: ModalContentType) =>
           setModalContent(content)
         }
@@ -37,17 +38,22 @@ export const Task: React.FC<TaskType> = ({ ...data }) => {
     ),
     edit: (
       <Modal.View.Edit
-        task={{ ...data }}
+        task={{ ...task }}
         submit={(obj) => dispatch(updateTaskApi(obj))}
       />
     ),
     delete: (
       <Modal.View.Delete
         item={{ name: title, type: "task" }}
-        submit={() => dispatch(deleteTaskApi(data.id))}
+        submit={() => dispatch(deleteTaskApi(task.id))}
       />
     ),
   };
+
+  const { ref, isDragging } = useTaskDragAndDrop<HTMLDivElement>({
+    task,
+    index,
+  });
 
   return (
     <>
@@ -57,7 +63,14 @@ export const Task: React.FC<TaskType> = ({ ...data }) => {
         hide={() => handleHide()}
       />
 
-      <div className="task-wrapper" onClick={() => setShowModal(true)}>
+      <div
+        className="task-wrapper"
+        onClick={() => setShowModal(true)}
+        ref={ref}
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+        }}
+      >
         <Typography variant="M" className="task-title">
           {title}
         </Typography>
