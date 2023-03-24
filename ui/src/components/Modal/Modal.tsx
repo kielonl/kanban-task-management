@@ -51,12 +51,9 @@ export const Window: React.FC<WindowProps> = ({
   title,
   content,
 }) => {
-  const { loading } = useAppSelector((state) => state.board);
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") hide();
   }, []);
-
-  if (loading.currentBoard) hide();
 
   useEffect(() => {
     if (isShown) {
@@ -198,7 +195,7 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
 };
 
 const Add: React.FC<AddProps> = ({ board_id, submit }) => {
-  const [tempTask, setTempTask] = useState<Omit<TaskType, "id">>({
+  const [tempTask, setTempTask] = useState<Omit<TaskType, "id" | "column_id">>({
     title: "",
     description: "",
     status: "TODO",

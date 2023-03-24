@@ -28,7 +28,6 @@ export const useColumnTasks = (column: Status) => {
 
   useEffect(() => {
     if (!tasks) return;
-    console.log(tasks);
   }, [tasks]);
 
   const columnTasks = tasks ? tasks[column] : undefined;

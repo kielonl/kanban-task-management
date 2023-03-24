@@ -14,12 +14,10 @@ export function useColumnDrop(
   const [{ isOver }, dropRef] = useDrop<DragItem, void, { isOver: boolean }>({
     accept: "task",
     drop: (dragItem) => {
-      console.log({ dragItem, column });
       if (!dragItem || dragItem.from === column) {
         return;
       }
 
-      console.log({ dragItem, column });
       handleDrop(dragItem.from, dragItem.id);
     },
     collect: (monitor) => ({
