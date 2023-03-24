@@ -13,7 +13,7 @@ $dark-gray: #2b2c37;
 .modal-wrapper {
   z-index: 1000;
   position: fixed;
-  width: 30rem;
+  width: min(30rem, 80%);
   border-radius: 6px;
   transform: translate(-50%, -50%);
   top: 50%;

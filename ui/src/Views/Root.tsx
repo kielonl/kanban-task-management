@@ -4,7 +4,7 @@ import { Board } from "./Board";
 import "./Root.scss";
 
 export const Root = () => {
-  const [showSidebar, setShowSidebar] = useState<boolean>(true);
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
   return (
     <div

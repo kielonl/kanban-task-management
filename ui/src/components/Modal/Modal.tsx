@@ -67,7 +67,7 @@ export const Window: React.FC<WindowProps> = ({
     <>
       {isShown && (
         <>
-          <div className="modal-backdrop"></div>
+          <Backdrop />
           <div className="modal-wrapper">
             <Typography variant="L" className="modal-title">
               {title}
@@ -78,6 +78,10 @@ export const Window: React.FC<WindowProps> = ({
       )}
     </>
   );
+};
+
+export const Backdrop = () => {
+  return <div className="modal-backdrop"></div>;
 };
 
 export const Checkout: React.FC<CheckoutProps> = ({
