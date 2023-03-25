@@ -60,3 +60,15 @@ $dark-gray: #2b2c37;
     gap: 2rem;
   }
 }
+
+@media (max-width: 600px) {
+  .modal-wrapper {
+    .delete-buttons {
+      flex-direction: column;
+      gap: 0;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
