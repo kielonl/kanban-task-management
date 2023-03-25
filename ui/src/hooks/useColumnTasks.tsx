@@ -24,7 +24,7 @@ export const useColumnTasks = (column: Status) => {
     );
     if (!tasks) return;
     setTasks(tasks);
-  }, [loading]);
+  }, [loading, currentBoard]);
 
   useEffect(() => {
     if (!tasks) return;

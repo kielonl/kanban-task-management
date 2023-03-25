@@ -2,6 +2,7 @@
 
 $medium-gray: #828fa3;
 .main-wrapper {
+  // margin-left: 250px;
   transition: margin-left 0.5s;
   height: 90vh;
 }
@@ -27,4 +28,10 @@ $medium-gray: #828fa3;
   justify-content: center;
   align-items: center;
   gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .main-wrapper {
+    margin-left: 0;
+  }
 }

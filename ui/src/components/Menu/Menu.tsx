@@ -13,7 +13,7 @@ import { Typography } from "../Typography/Typography";
 
 import "./Menu.scss";
 import classNames from "classnames";
-import Dropdown from "../Dropdown/Dropdown";
+import * as Popover from "@radix-ui/react-popover";
 
 interface SidebarProps {
   isShown: boolean;
@@ -40,7 +40,7 @@ const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
 
 const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
   return (
-    <>
+    <div>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
       <div
         className={classNames("sidebar-wrapper", !isShown && "sidebar-hidden")}
@@ -63,19 +63,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 const Upperbar = () => {
-  //fix browser error related to this state later
   const [showModal, setShowModal] = useState<boolean>(false);
-  // const [showNavMenu, setShowNavMenu] = useState<boolean>(false);
-  const { loading, currentBoard } = useAppSelector((state) => state.board);
+  const { currentBoard } = useAppSelector((state) => state.board);
 
   const dispatch = useAppDispatch();
-
-  // const handle
 
   return (
     <>
@@ -92,12 +88,16 @@ const Upperbar = () => {
       />
       <div className="upperbar-wrapper">
         <div className="upperbar-container">
-          <Typography variant="XL" className="upperbar-name">
-            {/* {loading.boards ? <Loader /> : currentBoard.name} */}
-            <NavMenuMobile
-              name={loading.boards ? <Loader /> : currentBoard.name}
-            />
-          </Typography>
+          <div className="upperbar-name">
+            {/* maybe add loader here later.
+            deleted now because it was causing problems */}
+            <Typography variant="XL" className="desktop-only">
+              {currentBoard.name}
+            </Typography>
+            <div className="mobile-only">
+              <NavMenuMobile name={currentBoard.name} />
+            </div>
+          </div>
           <div className="spacer"></div>
           <Button onClick={() => setShowModal(true)}>
             + <span className="upperbar-add-text">Add New Task</span>
@@ -123,7 +123,9 @@ const BoardNames = () => {
 
   return (
     <div className="sidebar-boards">
-      <Typography variant="S">ALL BOARDS ({boards.length})</Typography>
+      <Typography variant="S" className="sidebar-boards-header">
+        ALL BOARDS ({boards.length})
+      </Typography>
       {boards.map((board, index: number) => (
         <Link to={`/board/${board.id}`} key={index}>
           <Typography
@@ -147,25 +149,20 @@ const BoardNames = () => {
 };
 
 const NavMenuMobile: React.FC<NavMenuProps> = ({ name }) => {
-  const [isShown, setIsShown] = useState<boolean>(false);
-
   return (
-    <>
-      <div onClick={() => setIsShown(true)}>{name}</div>
-      {isShown && (
-        <>
-          <div onClick={() => setIsShown(false)}>
-            <Backdrop />
-          </div>
-          <div className="navmenu-container--mobile">
-            <div className="navmenu-container-boards--mobile">
-              <BoardNames />
-            </div>
-            <ThemeToggler />
-          </div>
-        </>
-      )}
-    </>
+    <Popover.Root modal>
+      <Popover.Trigger className="navmenu-trigger--mobile">
+        <Logo />
+        <Typography variant="XL">{name}</Typography>
+        <Icon.ArrowDown className="arrow-down" />
+      </Popover.Trigger>
+      <Popover.Content className="navmenu-content--mobile">
+        <div className="navmenu-boards--mobile">
+          <BoardNames />
+        </div>
+        <ThemeToggler />
+      </Popover.Content>
+    </Popover.Root>
   );
 };
 
