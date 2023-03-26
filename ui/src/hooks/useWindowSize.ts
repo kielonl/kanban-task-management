@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 export const useWindowSize = () => {
-  //move this to external file later
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
     window.innerHeight,
