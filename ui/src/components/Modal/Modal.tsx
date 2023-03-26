@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "../../assets/icons/Icon";
-import { useAppSelector } from "../../hooks/hooks";
 import { TaskCreate } from "../../services";
 import { SubTaskType, TaskType } from "../../types";
 import { Button } from "../Button/Button";
@@ -67,7 +67,7 @@ export const Window: React.FC<WindowProps> = ({
     <>
       {isShown && (
         <>
-          <div className="modal-backdrop"></div>
+          <Backdrop />
           <div className="modal-wrapper">
             <Typography variant="L" className="modal-title">
               {title}
@@ -78,6 +78,10 @@ export const Window: React.FC<WindowProps> = ({
       )}
     </>
   );
+};
+
+export const Backdrop: React.FC<{ className?: string }> = ({ className }) => {
+  return <div className={classNames("modal-backdrop", className)}></div>;
 };
 
 export const Checkout: React.FC<CheckoutProps> = ({

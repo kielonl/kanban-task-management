@@ -24,7 +24,7 @@ export const useColumnTasks = (column: Status) => {
     );
     if (!tasks) return;
     setTasks(tasks);
-  }, [loading]);
+  }, [loading.currentBoard]);
 
   useEffect(() => {
     if (!tasks) return;
@@ -49,16 +49,14 @@ export const useColumnTasks = (column: Status) => {
             newColumn: column,
           })
         );
-
-        const newFromColumnTasks = fromColumnTasks.filter(
-          (task) => task.id !== id
-        );
-        const newToColumnTasks = [...toColumnTasks, movingTask];
-
+        console.log({
+          ...allTasks,
+          [from]: fromColumnTasks.filter((task) => task.id !== id),
+        });
         return {
           ...allTasks,
-          [from]: newFromColumnTasks,
-          [column]: newToColumnTasks,
+          [from]: fromColumnTasks.filter((task) => task.id !== id),
+          [column]: [...toColumnTasks, movingTask],
         };
       });
     },

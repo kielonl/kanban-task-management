@@ -1,16 +1,23 @@
-const ArrowDown = () => {
+interface IconProps {
+  className?: string;
+}
+const ArrowDown: React.FC<IconProps> = ({ ...props }) => {
   return (
-    <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
-      <path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4" />
-    </svg>
+    <div {...props}>
+      <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+        <path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4" />
+      </svg>
+    </div>
   );
 };
 
-const ArrowUp = () => {
+const ArrowUp: React.FC<IconProps> = ({ ...props }) => {
   return (
-    <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
-      <path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6" />
-    </svg>
+    <div {...props}>
+      <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+        <path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6" />
+      </svg>
+    </div>
   );
 };
 
@@ -85,6 +92,20 @@ const LogoLight = () => {
   );
 };
 
+const LogoMobile: React.FC<{ className?: string }> = ({ ...props }) => {
+  return (
+    <div {...props}>
+      <svg width="24" height="25" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#635FC7" fillRule="evenodd">
+          <rect width="6" height="25" rx="2" />
+          <rect opacity=".75" x="9" width="6" height="25" rx="2" />
+          <rect opacity=".5" x="18" width="6" height="25" rx="2" />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
 const Ellipsis = () => {
   return (
     <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -139,6 +160,7 @@ export const Icon = {
   Logo: {
     Light: LogoLight,
     Dark: LogoDark,
+    Mobile: LogoMobile,
   },
   Ellipsis,
   Theme: {

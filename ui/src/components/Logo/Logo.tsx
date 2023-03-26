@@ -5,8 +5,11 @@ import { Icon } from "../../assets/icons/Icon";
 export const Logo = () => {
   const { theme } = useContext(ThemeContext);
   return (
-    <div className="logo-container">
-      {theme === "light" ? <Icon.Logo.Light /> : <Icon.Logo.Dark />}
+    <div>
+      <div className="desktop-only">
+        {theme === "light" ? <Icon.Logo.Light /> : <Icon.Logo.Dark />}
+      </div>
+      <Icon.Logo.Mobile className="mobile-only" />
     </div>
   );
 };

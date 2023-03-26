@@ -13,7 +13,7 @@ $dark-gray: #2b2c37;
 .modal-wrapper {
   z-index: 1000;
   position: fixed;
-  width: 30rem;
+  width: min(30rem, 80%);
   border-radius: 6px;
   transform: translate(-50%, -50%);
   top: 50%;
@@ -58,5 +58,17 @@ $dark-gray: #2b2c37;
     flex-direction: row;
     justify-content: space-between;
     gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-wrapper {
+    .delete-buttons {
+      flex-direction: column;
+      gap: 0;
+      button {
+        width: 100%;
+      }
+    }
   }
 }

@@ -28,3 +28,9 @@ $medium-gray: #828fa3;
   align-items: center;
   gap: 2rem;
 }
+
+@media (max-width: 600px) {
+  .main-wrapper {
+    margin-left: 0;
+  }
+}

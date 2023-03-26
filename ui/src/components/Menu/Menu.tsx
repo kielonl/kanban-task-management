@@ -13,6 +13,7 @@ import { Typography } from "../Typography/Typography";
 
 import "./Menu.scss";
 import classNames from "classnames";
+import * as Popover from "@radix-ui/react-popover";
 
 interface SidebarProps {
   isShown: boolean;
@@ -21,6 +22,10 @@ interface SidebarProps {
 
 interface ShowSidebarButtonProps {
   showSidebar: () => void;
+}
+
+interface NavMenuProps {
+  name: string | JSX.Element;
 }
 
 const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
@@ -34,17 +39,8 @@ const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
-  const { loading, boards, currentBoard } = useAppSelector(
-    (state) => state.board
-  );
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getBoardsNames());
-  }, []);
-
   return (
-    <>
+    <div>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
       <div
         className={classNames("sidebar-wrapper", !isShown && "sidebar-hidden")}
@@ -53,33 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           <div className="sidebar-logo">
             <Logo />
           </div>
-          <div className="sidebar-boards">
-            <Typography variant="S">ALL BOARDS ({boards.length})</Typography>
-
-            {loading.boards ? (
-              <Loader />
-            ) : (
-              boards.map((board, index: number) => (
-                <Link to={`/board/${board.id}`} key={index}>
-                  <Typography
-                    variant="M"
-                    className={classNames(
-                      "sidebar-board",
-                      board.id === currentBoard.id && "sidebar-board-selected"
-                    )}
-                    key={board.id}
-                  >
-                    <Icon.Board />
-                    {board.name}
-                  </Typography>
-                </Link>
-              ))
-            )}
-
-            <Typography variant="M" className="sidebar-create-board">
-              + Create New Board
-            </Typography>
-          </div>
+          {/* <BoardNames /> */}
           <div className="spacer"></div>
           <div>
             <ThemeToggler />
@@ -93,14 +63,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 const Upperbar = () => {
-  //fix browser error related to this state later
   const [showModal, setShowModal] = useState<boolean>(false);
-  const { loading, currentBoard } = useAppSelector((state) => state.board);
+  const { currentBoard } = useAppSelector((state) => state.board);
 
   const dispatch = useAppDispatch();
 
@@ -119,15 +88,81 @@ const Upperbar = () => {
       />
       <div className="upperbar-wrapper">
         <div className="upperbar-container">
-          <Typography variant="XL" className="upperbar-name">
-            {loading.boards ? <Loader /> : currentBoard.name}
-          </Typography>
+          <div className="upperbar-name">
+            {/* maybe add loader here later.
+            deleted now because it was causing problems */}
+            <Typography variant="XL" className="desktop-only">
+              {currentBoard.name}
+            </Typography>
+            <div className="mobile-only">
+              <NavMenuMobile name={currentBoard.name} />
+            </div>
+          </div>
           <div className="spacer"></div>
-          <Button onClick={() => setShowModal(true)}>+ Add New Task</Button>
+          <Button onClick={() => setShowModal(true)}>
+            + <span className="upperbar-add-text">Add New Task</span>
+          </Button>
           <Icon.Ellipsis />
         </div>
       </div>
     </>
+  );
+};
+
+const BoardNames = () => {
+  const { loading, boards, currentBoard } = useAppSelector(
+    (state) => state.board
+  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getBoardsNames());
+  }, []);
+
+  if (loading.boards || !boards.length) return <Loader />;
+
+  return (
+    <div className="sidebar-boards">
+      <Typography variant="S" className="sidebar-boards-header">
+        ALL BOARDS ({boards.length})
+      </Typography>
+      {boards.map((board, index: number) => (
+        <Link to={`/board/${board.id}`} key={index}>
+          <Typography
+            variant="M"
+            className={classNames(
+              "sidebar-board",
+              board.id === currentBoard.id && "sidebar-board-selected"
+            )}
+            key={board.id}
+          >
+            <Icon.Board />
+            {board.name}
+          </Typography>
+        </Link>
+      ))}
+      <Typography variant="M" className="sidebar-create-board">
+        + Create New Board
+      </Typography>
+    </div>
+  );
+};
+
+const NavMenuMobile: React.FC<NavMenuProps> = ({ name }) => {
+  return (
+    <Popover.Root modal>
+      <Popover.Trigger className="navmenu-trigger--mobile">
+        <Logo />
+        <Typography variant="XL">{name}</Typography>
+        <Icon.ArrowDown className="arrow-down" />
+      </Popover.Trigger>
+      <Popover.Content className="navmenu-content--mobile">
+        <div className="navmenu-boards--mobile">
+          <BoardNames />
+        </div>
+        <ThemeToggler />
+      </Popover.Content>
+    </Popover.Root>
   );
 };
 
