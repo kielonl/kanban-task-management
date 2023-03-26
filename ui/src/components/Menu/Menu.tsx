@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           <div className="sidebar-logo">
             <Logo />
           </div>
-          {/* <BoardNames /> */}
+          <BoardNames />
           <div className="spacer"></div>
           <div>
             <ThemeToggler />
@@ -75,17 +75,6 @@ const Upperbar = () => {
 
   return (
     <>
-      <Modal.Window
-        title={"Add task"}
-        content={
-          <Modal.View.Add
-            board_id={currentBoard.id}
-            submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
-          />
-        }
-        isShown={showModal}
-        hide={() => setShowModal(false)}
-      />
       <div className="upperbar-wrapper">
         <div className="upperbar-container">
           <div className="upperbar-name">
@@ -99,9 +88,21 @@ const Upperbar = () => {
             </div>
           </div>
           <div className="spacer"></div>
-          <Button onClick={() => setShowModal(true)}>
-            + <span className="upperbar-add-text">Add New Task</span>
-          </Button>
+          <Modal.Window
+            title={"Add task"}
+            isShown={showModal}
+            hide={() => setShowModal(false)}
+            content={
+              <Modal.View.Add
+                board_id={currentBoard.id}
+                submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
+              />
+            }
+          >
+            <Button onClick={() => setShowModal(true)}>
+              + <span className="upperbar-add-text">Add New Task</span>
+            </Button>
+          </Modal.Window>
           <Icon.Ellipsis />
         </div>
       </div>
