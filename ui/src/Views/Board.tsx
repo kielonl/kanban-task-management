@@ -13,9 +13,9 @@ export const Board = () => {
   return (
     <div className="main-board">
       <DndProvider backend={HTML5Backend}>
-        <Column name="TODO" />
-        <Column name="DOING" />
-        <Column name="DONE" />
+        {columns?.map((column) => (
+          <Column key={column.id} name={column.name} />
+        ))}
       </DndProvider>
     </div>
   );

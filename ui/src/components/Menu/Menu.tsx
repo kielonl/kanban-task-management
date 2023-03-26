@@ -7,7 +7,7 @@ import { TaskCreate } from "../../services";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
-import { Backdrop, Modal } from "../Modal/Modal";
+import { Modal } from "../Modal/Modal";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
           <div className="sidebar-logo">
             <Logo />
           </div>
-          <BoardNames />
+          {/* <BoardNames /> */}
           <div className="spacer"></div>
           <div>
             <ThemeToggler />
