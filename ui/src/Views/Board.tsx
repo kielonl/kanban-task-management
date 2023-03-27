@@ -11,7 +11,7 @@ export const Board = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="main-board">
+    <div className="h-full overflow-x-scroll p-8 text-gray-600 flex flex-row gap-8 bg-light-grey">
       <DndProvider backend={HTML5Backend}>
         {columns?.map((column) => (
           <Column key={column.id} name={column.name} />

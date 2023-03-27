@@ -4,7 +4,7 @@ import { Icon } from "../../assets/icons/Icon";
 import { TaskCreate } from "../../services";
 import { SubTaskType, TaskType } from "../../types";
 import { Button } from "../Button/Button";
-import Dropdown from "../Dropdown/Dropdown";
+import { Dropdown } from "../Dropdown/Dropdown";
 import { TaskForm } from "../Form/Form";
 import { TextArea } from "../TextArea/TextArea";
 import { TextField } from "../TextField/TextField";
@@ -97,10 +97,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
       <Typography variant="L" className="modal-checkout-title">
         {task.title}
       </Typography>
-      <Dropdown.Menu
-        className="modal-checkout-dropdown"
-        icon={<Icon.Ellipsis />}
-      >
+      <Dropdown.Menu className="modal-checkout-dropdown">
         <Dropdown.Item name={"Edit"} onClick={() => handleChange("edit")} />
         <Dropdown.Item name={"Delete"} onClick={() => handleChange("delete")} />
       </Dropdown.Menu>

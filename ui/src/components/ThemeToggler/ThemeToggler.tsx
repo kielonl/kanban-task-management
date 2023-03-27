@@ -3,8 +3,6 @@ import { Icon } from "../../assets/icons/Icon";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { CheckboxSlider } from "../CheckboxSlider/CheckboxSlider";
 
-import "./ThemeToggler.scss";
-
 export const ThemeToggler = () => {
   const { theme, setTheme } = useContext(ThemeContext);
 
@@ -14,8 +12,8 @@ export const ThemeToggler = () => {
 
   return (
     <>
-      <div className="theme-toggler-container">
-        <div className="theme-toggler-items">
+      <div className="flex items-center rounded-md ">
+        <div className="w-full flex items-center py-4 mx-4 justify-center gap-4 bg-light-grey">
           <Icon.Theme.Light />
           <CheckboxSlider
             id="slider"

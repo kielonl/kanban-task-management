@@ -11,7 +11,6 @@ import { Modal } from "../Modal/Modal";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
-import "./Menu.scss";
 import classNames from "classnames";
 import * as Popover from "@radix-ui/react-popover";
 
@@ -32,7 +31,10 @@ const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
   showSidebar,
 }) => {
   return (
-    <div onClick={() => showSidebar()} className="show-sidebar-button-wrapper">
+    <div
+      onClick={() => showSidebar()}
+      className="fixed duration-500 delay-500 bottom-8 px-4 py-6 rounded-r-full bg-main-purple cursor-pointer "
+    >
       <Icon.ShowSidebar />
     </div>
   );
@@ -43,20 +45,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
     <div>
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
       <div
-        className={classNames("sidebar-wrapper", !isShown && "sidebar-hidden")}
+        className={classNames(
+          //check this later
+          "h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] z-[1] duration-500",
+          !isShown && "-ml-64"
+        )}
       >
-        <div className="sidebar-container">
-          <div className="sidebar-logo">
+        <div className="h-full  flex flex-col justify-center">
+          <div className="p-8 ">
             <Logo />
           </div>
-          {/* <BoardNames /> */}
-          <div className="spacer"></div>
+          <BoardNames />
+          <div className="flex-1"></div>
           <div>
             <ThemeToggler />
             <Typography
               variant="M"
               onClick={() => setIsShown(false)}
-              className="sidebar-hide"
+              className="flex flex-row cursor-pointer p-8 text-gray-600 [&>*]:mx-3"
             >
               <Icon.HideSidebar /> Hide Sidebar
             </Typography>
@@ -86,9 +92,9 @@ const Upperbar = () => {
         isShown={showModal}
         hide={() => setShowModal(false)}
       />
-      <div className="upperbar-wrapper">
-        <div className="upperbar-container">
-          <div className="upperbar-name">
+      <div className="h-[10vh]">
+        <div className="flex flex-row justify-between items-center h-full">
+          <div className="p-8">
             {/* maybe add loader here later.
             deleted now because it was causing problems */}
             <Typography variant="XL" className="desktop-only">
@@ -98,11 +104,13 @@ const Upperbar = () => {
               <NavMenuMobile name={currentBoard.name} />
             </div>
           </div>
-          <div className="spacer"></div>
-          <Button onClick={() => setShowModal(true)}>
-            + <span className="upperbar-add-text">Add New Task</span>
-          </Button>
-          <Icon.Ellipsis />
+          <div className="flex-1"></div>
+          <div className="flex flex-row items-center [&>*]:mx-4">
+            <Button onClick={() => setShowModal(true)} className="w-40 p-3">
+              {/* add styling here later */}+ <span>Add New Task</span>
+            </Button>
+            <Icon.Ellipsis />
+          </div>
         </div>
       </div>
     </>
@@ -122,8 +130,8 @@ const BoardNames = () => {
   if (loading.boards || !boards.length) return <Loader />;
 
   return (
-    <div className="sidebar-boards">
-      <Typography variant="S" className="sidebar-boards-header">
+    <div className="flex flex-col h-full overflow-y-auto last:pl-4 last:pb-4">
+      <Typography variant="S" className="p-4">
         ALL BOARDS ({boards.length})
       </Typography>
       {boards.map((board, index: number) => (
@@ -131,8 +139,9 @@ const BoardNames = () => {
           <Typography
             variant="M"
             className={classNames(
-              "sidebar-board",
-              board.id === currentBoard.id && "sidebar-board-selected"
+              "w-3/5 text-gray-600 flex gap-2 cursor-pointer py-3 px-8 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
+              board.id === currentBoard.id &&
+                "bg-main-purple text-white hover:bg-main-purple hover:text-white"
             )}
             key={board.id}
           >
@@ -141,7 +150,7 @@ const BoardNames = () => {
           </Typography>
         </Link>
       ))}
-      <Typography variant="M" className="sidebar-create-board">
+      <Typography variant="M" className="text-main-purple cursor-pointer m-4">
         + Create New Board
       </Typography>
     </div>

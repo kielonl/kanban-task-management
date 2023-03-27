@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ThemeContext } from "./contexts/ThemeContext";
 import { Root } from "./Views/Root";
-import "./App.scss";
 import { Provider } from "react-redux";
 import { rootStore } from "./store/store";
 

@@ -1,6 +1,4 @@
-import classNames from "classnames";
 import { Typography } from "../Typography/Typography";
-import "./TextField.scss";
 
 interface TextFieldProps
   extends React.DetailedHTMLProps<
@@ -8,20 +6,18 @@ interface TextFieldProps
     HTMLInputElement
   > {
   label: string;
-  error?: boolean;
 }
 
-export const TextField: React.FC<TextFieldProps> = ({
-  label,
-  error,
-  ...props
-}) => {
+export const TextField: React.FC<TextFieldProps> = ({ label, ...props }) => {
   return (
-    <label className={classNames("input-wrapper", error && "input-error")}>
-      <div className="input-label">
+    <label className="flex flex-col">
+      <div className="capitalize mb-1">
         <Typography variant="BodyM">{label}</Typography>
       </div>
-      <input {...props} className="input" />
+      <input
+        {...props}
+        className="w-full  p-1 rounded bg-transparent border-[1px] border-thin-grey"
+      />
     </label>
   );
 };
