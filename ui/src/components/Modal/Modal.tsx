@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Icon } from "../../assets/icons/Icon";
 import { TaskCreate } from "../../services";
 import { SubTaskType, TaskType } from "../../types";
@@ -77,9 +77,7 @@ export const Backdrop: React.FC<{ className?: string }> = ({ className }) => {
 export const Checkout: React.FC<CheckoutProps> = ({ task, changeTo }) => {
   return (
     <TaskForm.Form>
-      <Typography variant="L" className="modal-checkout-title">
-        {task.title}
-      </Typography>
+      <Typography variant="L">{task.title}</Typography>
       {/* move this to another component later */}
       <Popover.Root>
         <Popover.Trigger className="popover-trigger">
@@ -116,7 +114,6 @@ export const Edit: React.FC<EditProps> = ({ task, submit }) => {
     submit(tempTask);
   };
 
-  <Popover.Root></Popover.Root>;
   const handleDeleteSubtask = (index: number) => {
     const newSubtasks = tempTask.subtasks.filter((_, i) => i !== index);
     setTempTask({ ...tempTask, subtasks: newSubtasks });
@@ -284,7 +281,6 @@ export const Delete: React.FC<DeleteProps> = ({ item, submit, cancel }) => {
   };
 
   const handleCancel = () => {
-    //implement cancel
     cancel();
   };
 
