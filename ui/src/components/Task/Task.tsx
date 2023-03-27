@@ -23,17 +23,15 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   ).length;
 
   const handleHide = () => {
-    setShowModal(false);
     setModalContent("checkout");
+    setShowModal(false);
   };
 
   const modalContents = {
     checkout: (
       <Modal.View.Checkout
         task={{ ...task }}
-        changeModalContent={(content: ModalContentType) =>
-          setModalContent(content)
-        }
+        changeTo={(content: ModalContentType) => setModalContent(content)}
       />
     ),
     edit: (
@@ -46,6 +44,7 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
       <Modal.View.Delete
         item={{ name: title, type: "task" }}
         submit={() => dispatch(deleteTaskApi(task.id))}
+        cancel={() => handleHide()}
       />
     ),
   };
@@ -61,23 +60,23 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
         content={modalContents[modalContent]}
         isShown={showModal}
         hide={() => handleHide()}
-      />
-
-      <div
-        className="task-wrapper"
-        onClick={() => setShowModal(true)}
-        ref={ref}
-        style={{
-          opacity: isDragging ? 0.5 : 1,
-        }}
       >
-        <Typography variant="M" className="task-title">
-          {title}
-        </Typography>
-        <Typography variant="BodyM" className="task-subtasks">
-          {doneSubtasks} out of {subtasks.length}
-        </Typography>
-      </div>
+        <div
+          className="task-wrapper"
+          onClick={() => setShowModal(true)}
+          ref={ref}
+          style={{
+            opacity: isDragging ? 0.5 : 1,
+          }}
+        >
+          <Typography variant="M" className="task-title">
+            {title}
+          </Typography>
+          <Typography variant="BodyM" className="task-subtasks">
+            {doneSubtasks} out of {subtasks.length}
+          </Typography>
+        </div>
+      </Modal.Window>
     </>
   );
 };
