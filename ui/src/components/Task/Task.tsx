@@ -6,8 +6,6 @@ import { TaskProps } from "../../types";
 import { Modal } from "../Modal/Modal";
 import { Typography } from "../Typography/Typography";
 
-import "./Task.scss";
-
 type ModalContentType = "checkout" | "edit" | "delete";
 
 export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
@@ -23,8 +21,8 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   ).length;
 
   const handleHide = () => {
-    setModalContent("checkout");
     setShowModal(false);
+    setModalContent(modalContent);
   };
 
   const modalContents = {
@@ -62,17 +60,18 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
         hide={() => handleHide()}
       >
         <div
-          className="task-wrapper"
+          className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
           onClick={() => setShowModal(true)}
           ref={ref}
           style={{
             opacity: isDragging ? 0.5 : 1,
           }}
         >
-          <Typography variant="M" className="task-title">
-            {title}
-          </Typography>
-          <Typography variant="BodyM" className="task-subtasks">
+          <Typography variant="M">{title}</Typography>
+          <Typography
+            variant="BodyM"
+            className="text-medium-grey text-bold mt-4"
+          >
             {doneSubtasks} out of {subtasks.length}
           </Typography>
         </div>

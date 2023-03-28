@@ -1,11 +1,8 @@
-import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
 import { Typography } from "../Typography/Typography";
-
-import "./Dropdown.scss";
 
 interface DropdownMenuProps
   extends React.DetailedHTMLProps<
@@ -13,7 +10,6 @@ interface DropdownMenuProps
     HTMLSelectElement
   > {
   currentValue?: string;
-  icon?: JSX.Element;
   className?: string;
 }
 
@@ -24,58 +20,41 @@ interface DropdownItemProps {
 
 const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
   return (
-    <div role="listitem" className="dropdown-item" onClick={() => onClick()}>
+    <Typography
+      variant="BodyL"
+      role="listitem"
+      className="hover:text-main-purple py-1 pl-4 dark:text-white dark:hover:text-main-purple"
+      onClick={() => onClick()}
+    >
       {name}
-    </div>
+    </Typography>
   );
 };
 
-const Menu: React.FC<DropdownMenuProps> = ({
-  currentValue,
-  children,
-  icon,
-  className,
-}) => {
+const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
-
-  window.addEventListener("click", (e) => {
-    if (!listOpen) return;
-
-    if (e.target instanceof HTMLElement) {
-      if (!e.target.classList.contains("dropdown-header")) {
-        setListOpen(false);
-      }
-    }
-  });
-
   return (
     <div
       onClick={() => setListOpen(!listOpen)}
-      className={classNames(
-        "dropdown-wrapper",
-        listOpen && "list-opened",
-        icon && "dropdown-icon",
-        className
-      )}
+      className={"w-full relative border border-main-purple rounded-lg"}
     >
       <div
-        className={classNames(
-          icon ? "dropdown-header--icon" : "dropdown-header"
-        )}
+        className={
+          "w-full relative flex flex-row justify-between items-center text-sm rounded p-2 bg-transparent"
+        }
       >
         <Typography variant="BodyL">
-          {icon}
-          {!icon && (currentValue || "Select an option")}
+          {currentValue || "Select an option"}
         </Typography>
-        {!icon && (
-          <div className="dropdown-toggle">
-            {listOpen ? <ArrowUp /> : <ArrowDown />}
-          </div>
-        )}
+        {<div>{listOpen ? <ArrowUp /> : <ArrowDown />}</div>}
       </div>
 
       {listOpen && (
-        <Typography variant="BodyM" role="list" className="dropdown-list">
+        <Typography
+          variant="BodyM"
+          role="list"
+          className="absolute w-full flex flex-col mt-0.5 rounded-lg text-gray-600 bg-white overflow-y-scroll cursor-pointer first:pt-4 last:pb-4  dark:bg-very-dark-grey"
+        >
           {children}
         </Typography>
       )}
@@ -83,9 +62,7 @@ const Menu: React.FC<DropdownMenuProps> = ({
   );
 };
 
-const Dropdown = {
+export const Dropdown = {
   Item,
   Menu,
 };
-
-export default Dropdown;

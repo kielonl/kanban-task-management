@@ -3,7 +3,6 @@ import { SubTaskType } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
-import "./Form.scss";
 
 interface FormProps
   extends React.DetailedHTMLProps<
@@ -21,7 +20,9 @@ interface ListSubTasksProps {
 }
 
 const Form: React.FC<FormProps> = ({ children }) => {
-  return <form className="form-container">{children}</form>;
+  return (
+    <form className="flex flex-col justify-center gap-8 m-8">{children}</form>
+  );
 };
 
 const ListSubTasks: React.FC<ListSubTasksProps> = ({
@@ -66,8 +67,8 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
   const EditAddView = subtasks.map((subtask, index) => {
     return (
       <div key={index}>
-        <div className="edit-subtask-container">
-          <div className="form-subtask-input">
+        <div className="flex flex-row">
+          <div className="w-[90%]">
             <TextField
               label={""}
               value={subtask.title}
@@ -75,7 +76,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
             />
           </div>
           <div
-            className="form-subtask-delete"
+            className="grid ml-auto cursor-pointer place-content-center"
             onClick={() => handleDeleteSubtask(index)}
           >
             <Icon.Cross />
