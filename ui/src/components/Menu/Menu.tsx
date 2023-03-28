@@ -33,7 +33,7 @@ const ShowSidebarButton: React.FC<ShowSidebarButtonProps> = ({
   return (
     <div
       onClick={() => showSidebar()}
-      className="fixed duration-500 delay-500 bottom-8 px-4 py-6 rounded-r-full bg-main-purple cursor-pointer "
+      className="fixed delay-500 bottom-8 px-4 py-6 rounded-r-full bg-main-purple cursor-pointer hidden md:block"
     >
       <Icon.ShowSidebar />
     </div>
@@ -46,8 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
       <div
         className={classNames(
-          //check this later
-          "h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] duration-500",
+          "hidden sm:block h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] duration-500 border-light-lines  dark:bg-dark-grey dark:border-dark-lines dark:text-white",
           !isShown && "-ml-64"
         )}
       >
@@ -62,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
             <Typography
               variant="M"
               onClick={() => setIsShown(false)}
-              className="flex flex-row cursor-pointer p-8 text-gray-600 [&>*]:mx-3"
+              className="flex flex-row cursor-pointer p-8 text-medium-grey [&>*]:mx-3"
             >
               <Icon.HideSidebar /> Hide Sidebar
             </Typography>
@@ -81,15 +80,15 @@ const Upperbar = () => {
 
   return (
     <>
-      <div className="h-[10vh]">
+      <div className="h-[10vh] dark:bg-dark-grey dark:text-white">
         <div className="flex flex-row justify-between items-center h-full">
           <div className="p-8">
             {/* maybe add loader here later.
             deleted now because it was causing problems */}
-            <Typography variant="XL" className="desktop-only">
+            <Typography variant="XL" className="hidden sm:block">
               {currentBoard.name}
             </Typography>
-            <div className="mobile-only">
+            <div className="sm:hidden block">
               <NavMenuMobile name={currentBoard.name} />
             </div>
           </div>
@@ -140,7 +139,7 @@ const BoardNames = () => {
           <Typography
             variant="M"
             className={classNames(
-              "w-[80%] text-gray-600 flex gap-2 cursor-pointer py-3 px-4 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
+              "w-[80%] text-medium-grey flex gap-2 cursor-pointer py-3 px-4 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
               board.id === currentBoard.id &&
                 "bg-main-purple text-white hover:bg-main-purple hover:text-white"
             )}
@@ -161,17 +160,24 @@ const BoardNames = () => {
 const NavMenuMobile: React.FC<NavMenuProps> = ({ name }) => {
   return (
     <Popover.Root modal>
-      <Popover.Trigger className="navmenu-trigger--mobile">
-        <Logo />
-        <Typography variant="XL">{name}</Typography>
-        <Icon.ArrowDown className="arrow-down" />
+      <Popover.Trigger className="flex flex-row gap-4 items-center">
+        <>
+          <Logo />
+          <Typography variant="XL">{name}</Typography>
+          <Icon.ArrowDown className="relative duration-250 ease-linear " />
+        </>
       </Popover.Trigger>
-      <Popover.Content className="navmenu-content--mobile">
-        <div className="navmenu-boards--mobile">
-          <BoardNames />
-        </div>
-        <ThemeToggler />
-      </Popover.Content>
+      <Popover.Portal>
+        <>
+          <div className="bg-black-opacity data-[state=open]:animate-overlayShow fixed inset-0"></div>
+          <Popover.Content className="bg-white z-[1] dark:bg-dark-grey w-[60vw] rounded-lg absolute top-20">
+            <div className="overflow-y-scroll max-h-60">
+              <BoardNames />
+            </div>
+            <ThemeToggler className="p-3" />
+          </Popover.Content>
+        </>
+      </Popover.Portal>
     </Popover.Root>
   );
 };

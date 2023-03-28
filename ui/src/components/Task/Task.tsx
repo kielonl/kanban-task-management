@@ -60,7 +60,7 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
         hide={() => handleHide()}
       >
         <div
-          className="flex flex-col bg-white p-6 rounded-lg w-[15em] drop-shadow-lg "
+          className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
           onClick={() => setShowModal(true)}
           ref={ref}
           style={{
@@ -68,7 +68,10 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
           }}
         >
           <Typography variant="M">{title}</Typography>
-          <Typography variant="BodyM" className="text-gray-600 mt-4">
+          <Typography
+            variant="BodyM"
+            className="text-medium-grey text-bold mt-4"
+          >
             {doneSubtasks} out of {subtasks.length}
           </Typography>
         </div>

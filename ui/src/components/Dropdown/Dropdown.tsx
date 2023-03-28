@@ -23,7 +23,7 @@ const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
     <Typography
       variant="BodyL"
       role="listitem"
-      className="hover:text-main-purple py-1 pl-4"
+      className="hover:text-main-purple py-1 pl-4 dark:text-white dark:hover:text-main-purple"
       onClick={() => onClick()}
     >
       {name}
@@ -40,7 +40,7 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
     >
       <div
         className={
-          "w-full relative flex flex-row justify-between items-center text-sm rounded p-2 bg-transparents "
+          "w-full relative flex flex-row justify-between items-center text-sm rounded p-2 bg-transparent"
         }
       >
         <Typography variant="BodyL">
@@ -53,7 +53,7 @@ const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
         <Typography
           variant="BodyM"
           role="list"
-          className="absolute w-full flex flex-col mt-0.5 rounded-lg text-gray-600 bg-white overflow-y-scroll cursor-pointer first:pt-4 last:pb-4 "
+          className="absolute w-full flex flex-col mt-0.5 rounded-lg text-gray-600 bg-white overflow-y-scroll cursor-pointer first:pt-4 last:pb-4  dark:bg-very-dark-grey"
         >
           {children}
         </Typography>

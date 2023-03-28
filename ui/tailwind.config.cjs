@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -15,6 +16,7 @@ module.exports = {
         grey: "#828FA3",
         "light-grey": "#F4F7FD",
         "thin-grey": "#828ba340",
+        "medium-grey": "#828FA3",
         white: "#FFFFFF",
         red: "#EA5555",
         "red-hover": "#FF9898",

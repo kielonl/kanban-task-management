@@ -12,20 +12,3 @@ body {
   width: 100vw;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
-
-.desktop-only {
-  display: block;
-}
-
-.mobile-only {
-  display: none;
-}
-
-@media screen and (max-width: 600px) {
-  .mobile-only {
-    display: block;
-  }
-  .desktop-only {
-    display: none;
-  }
-}

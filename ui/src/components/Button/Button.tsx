@@ -24,7 +24,8 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClass = {
     primary: "bg-main-purple hover:bg-main-purple-hover text-white",
-    secondary: "bg-light-grey hover:bg-main-purple-light text-main-purple",
+    secondary:
+      "bg-light-grey hover:bg-main-purple-light text-main-purple dark:bg-light-grey",
     destructive: "bg-red hover:bg-red-hover text-white",
   };
 

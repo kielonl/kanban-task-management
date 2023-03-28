@@ -6,10 +6,10 @@ export const Logo = () => {
   const { theme } = useContext(ThemeContext);
   return (
     <div>
-      <div className="desktop-only">
+      <div className="hidden sm:block">
         {theme === "light" ? <Icon.Logo.Light /> : <Icon.Logo.Dark />}
       </div>
-      <Icon.Logo.Mobile className="mobile-only" />
+      <Icon.Logo.Mobile className="block sm:hidden" />
     </div>
   );
 };

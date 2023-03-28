@@ -59,7 +59,7 @@ const Window: React.FC<WindowProps> = ({
       {children}
       <Dialog.Portal>
         <Dialog.Overlay className="bg-black-opacity data-[state=open]:animate-overlayShow fixed inset-0 " />
-        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
+        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white dark:bg-dark-grey dark:text-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ">
           <Dialog.Title>{title}</Dialog.Title>
           {content}
         </Dialog.Content>
@@ -74,15 +74,19 @@ export const Checkout: React.FC<CheckoutProps> = ({ task, changeTo }) => {
       <Typography variant="L">{task.title}</Typography>
       {/* move this to another component later */}
       <Popover.Root>
-        <Popover.Trigger className="w-8 h-8 flex justify-center items-center fixed cursor-pointer top-12 right-4">
+        <Popover.Trigger className="w-8 h-8 flex justify-center items-center fixed cursor-pointer top-12 right-4 ">
           <Icon.Ellipsis />
         </Popover.Trigger>
         <Popover.Portal>
-          <Popover.Content className="bg-white p-2 rounded-lg cursor-pointer">
+          <Popover.Content className="bg-white dark:bg-dark-grey p-2 rounded-lg cursor-pointer dark:text-white">
             <Typography variant="BodyL" onClick={() => changeTo("edit")}>
               Edit Task
             </Typography>
-            <Typography variant="BodyL" onClick={() => changeTo("delete")}>
+            <Typography
+              variant="BodyL"
+              className="text-red"
+              onClick={() => changeTo("delete")}
+            >
               Delete Task
             </Typography>
           </Popover.Content>

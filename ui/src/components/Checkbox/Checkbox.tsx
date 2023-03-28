@@ -24,10 +24,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
   return (
     <label
-      className="flex items-center rounded text-xs font-bold w-full cursor-pointer"
+      className="flex items-center rounded text-xs font-bold w-full cursor-pointer  "
       htmlFor={id}
     >
-      <div className="w-full flex items-center pl-4 bg-light-grey hover:bg-main-purple-light rounded-md">
+      <div className="w-full flex items-center pl-4 bg-light-grey hover:bg-main-purple-light dark:hover:bg-very-dark-grey dark:bg-main-purple-light rounded-md dark:bg-very-dark-grey ">
         <input
           id={id}
           type="checkbox"

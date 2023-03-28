@@ -38,7 +38,10 @@ export const Column: React.FC<ColumnProps> = ({ name }) => {
       )}
       ref={dropRef}
     >
-      <Typography variant="S" className="uppercase flex flex-row gap-2">
+      <Typography
+        variant="S"
+        className="uppercase flex flex-row gap-2 text-black dark:text-white"
+      >
         <div
           className="h-4 w-4 rounded-full"
           style={{ background: dotColor[name] }}

@@ -16,7 +16,7 @@ export const TextArea: React.FC<TextAreaProps> = ({ label, ...props }) => {
       </div>
       <textarea
         {...props}
-        className="w-full h-12 p-1 resize-none rounded bg-transparent border-[1px] border-thin-grey "
+        className="w-full h-12 p-1 resize-none rounded bg-transparent border-[1px] border-thin-grey text-black dark:text-white"
       />
     </label>
   );

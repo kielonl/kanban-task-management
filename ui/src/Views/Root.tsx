@@ -7,7 +7,7 @@ export const Root = () => {
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
   const { width } = useWindowSize();
 
-  const marginLeft = width < 600 ? "0" : showSidebar ? "250px" : "0";
+  const marginLeft = width <= 640 ? "0" : showSidebar ? "250px" : "0";
 
   return (
     <div
