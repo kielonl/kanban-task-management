@@ -13,6 +13,7 @@ import { Typography } from "../Typography/Typography";
 
 import classNames from "classnames";
 import * as Popover from "@radix-ui/react-popover";
+import { SmallDropdown } from "../SmallDropdown/SmallDropdown";
 
 interface SidebarProps {
   isShown: boolean;
@@ -46,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
       {!isShown && <ShowSidebarButton showSidebar={() => setIsShown(true)} />}
       <div
         className={classNames(
-          "hidden sm:block h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] duration-500 border-light-lines  dark:bg-dark-grey dark:border-dark-lines dark:text-white",
+          "hidden sm:block h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] transition-[margin-left] duration-500 border-light-lines  dark:bg-dark-grey dark:border-dark-lines dark:text-white",
           !isShown && "-ml-64"
         )}
       >
@@ -105,11 +106,17 @@ const Upperbar = () => {
               isShown={showModal}
               hide={() => setShowModal(false)}
             >
-              <Button onClick={() => setShowModal(true)} className="w-40 p-3">
-                {/* add styling here later */}+ <span>Add New Task</span>
+              <Button
+                onClick={() => setShowModal(true)}
+                className="md:w-40 md:p-3 p-3"
+              >
+                + <span className="hidden md:inline-block ">Add New Task</span>
               </Button>
             </Modal.Window>
-            <Icon.Ellipsis />
+            <SmallDropdown className="">
+              <Typography>Edit Board</Typography>
+              <Typography className="text-red">Delete Board</Typography>
+            </SmallDropdown>
           </div>
         </div>
       </div>

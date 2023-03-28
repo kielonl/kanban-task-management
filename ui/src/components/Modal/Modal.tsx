@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Icon } from "../../assets/icons/Icon";
 import { TaskCreate } from "../../services";
 import { SubTaskType, TaskType } from "../../types";
 import { Button } from "../Button/Button";
@@ -10,7 +9,7 @@ import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import * as Popover from "@radix-ui/react-popover";
+import { SmallDropdown } from "../SmallDropdown/SmallDropdown";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
@@ -72,26 +71,22 @@ export const Checkout: React.FC<CheckoutProps> = ({ task, changeTo }) => {
   return (
     <TaskForm.Form>
       <Typography variant="L">{task.title}</Typography>
-      {/* move this to another component later */}
-      <Popover.Root>
-        <Popover.Trigger className="w-8 h-8 flex justify-center items-center fixed cursor-pointer top-12 right-4 ">
-          <Icon.Ellipsis />
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content className="bg-white dark:bg-dark-grey p-2 rounded-lg cursor-pointer dark:text-white">
-            <Typography variant="BodyL" onClick={() => changeTo("edit")}>
-              Edit Task
-            </Typography>
-            <Typography
-              variant="BodyL"
-              className="text-red"
-              onClick={() => changeTo("delete")}
-            >
-              Delete Task
-            </Typography>
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+
+      <SmallDropdown
+        className="top-12 right-4 fixed flex justify-center items-center"
+        size={8}
+      >
+        <Typography variant="BodyL" onClick={() => changeTo("edit")}>
+          Edit Task
+        </Typography>
+        <Typography
+          variant="BodyL"
+          className="text-red"
+          onClick={() => changeTo("delete")}
+        >
+          Delete Task
+        </Typography>
+      </SmallDropdown>
 
       <Typography variant="BodyL">{task.description}</Typography>
       <TaskForm.ListSubTasks type="checkout" subtasks={task.subtasks} />
