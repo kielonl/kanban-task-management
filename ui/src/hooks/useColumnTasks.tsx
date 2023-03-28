@@ -49,10 +49,6 @@ export const useColumnTasks = (column: Status) => {
             newColumn: column,
           })
         );
-        console.log({
-          ...allTasks,
-          [from]: fromColumnTasks.filter((task) => task.id !== id),
-        });
         return {
           ...allTasks,
           [from]: fromColumnTasks.filter((task) => task.id !== id),
