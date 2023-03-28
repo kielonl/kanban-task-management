@@ -3,6 +3,7 @@ import { ThemeContext } from "./contexts/ThemeContext";
 import { Root } from "./Views/Root";
 import { Provider } from "react-redux";
 import { rootStore } from "./store/store";
+import "./App.css";
 
 function App() {
   const [theme, setTheme] = useState("light");

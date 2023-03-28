@@ -47,12 +47,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
       <div
         className={classNames(
           //check this later
-          "h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] z-[1] duration-500",
+          "h-full w-64 fixed top-0 left-0 overflow-x-hidden right-[25px] duration-500",
           !isShown && "-ml-64"
         )}
       >
-        <div className="h-full  flex flex-col justify-center">
-          <div className="p-8 ">
+        <div className="h-full flex flex-col justify-center">
+          <div className="p-8">
             <Logo />
           </div>
           <BoardNames />
@@ -140,7 +140,7 @@ const BoardNames = () => {
           <Typography
             variant="M"
             className={classNames(
-              "w-3/5 text-gray-600 flex gap-2 cursor-pointer py-3 px-8 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
+              "w-[80%] text-gray-600 flex gap-2 cursor-pointer py-3 px-4 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
               board.id === currentBoard.id &&
                 "bg-main-purple text-white hover:bg-main-purple hover:text-white"
             )}

@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import React, { useState } from "react";
 import { Icon } from "../../assets/icons/Icon";
 import { TaskCreate } from "../../services";
@@ -9,7 +8,6 @@ import { TaskForm } from "../Form/Form";
 import { TextArea } from "../TextArea/TextArea";
 import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
-import "./Modal.scss";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Popover from "@radix-ui/react-popover";
@@ -60,8 +58,8 @@ const Window: React.FC<WindowProps> = ({
     <Dialog.Root open={isShown} onOpenChange={() => hide && hide()}>
       {children}
       <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content">
+        <Dialog.Overlay className="bg-black-opacity data-[state=open]:animate-overlayShow fixed inset-0 " />
+        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
           <Dialog.Title>{title}</Dialog.Title>
           {content}
         </Dialog.Content>
@@ -70,21 +68,17 @@ const Window: React.FC<WindowProps> = ({
   );
 };
 
-export const Backdrop: React.FC<{ className?: string }> = ({ className }) => {
-  return <div className={classNames("modal-backdrop", className)}></div>;
-};
-
 export const Checkout: React.FC<CheckoutProps> = ({ task, changeTo }) => {
   return (
     <TaskForm.Form>
       <Typography variant="L">{task.title}</Typography>
       {/* move this to another component later */}
       <Popover.Root>
-        <Popover.Trigger className="popover-trigger">
+        <Popover.Trigger className="w-8 h-8 flex justify-center items-center fixed cursor-pointer top-12 right-4">
           <Icon.Ellipsis />
         </Popover.Trigger>
         <Popover.Portal>
-          <Popover.Content className="popover-content">
+          <Popover.Content className="bg-white p-2 rounded-lg cursor-pointer">
             <Typography variant="BodyL" onClick={() => changeTo("edit")}>
               Edit Task
             </Typography>
@@ -291,7 +285,7 @@ export const Delete: React.FC<DeleteProps> = ({ item, submit, cancel }) => {
         Are you sure you want to delete the '{item.name}' board? This action
         will remove all columns and tasks and cannot be reversed.
       </Typography>
-      <div className="delete-buttons">
+      <div className="flex flex-row justify-between gap-8">
         <Button
           type="button"
           variant="destructive"
