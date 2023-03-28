@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Icon } from "../../assets/icons/Icon";
 import { TaskCreate } from "../../services";
 import { SubTaskType, TaskType } from "../../types";
@@ -11,20 +11,23 @@ import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
 import "./Modal.scss";
 
+import * as Dialog from "@radix-ui/react-dialog";
+import * as Popover from "@radix-ui/react-popover";
+
 type ModalContentType = "checkout" | "edit" | "delete";
 
 interface WindowProps {
   isShown: boolean;
-  hide: () => void;
-
+  hide?: () => void;
+  initialModal?: () => void;
   title?: string;
   content?: JSX.Element;
-  submit?: JSX.Element;
+  children: JSX.Element;
 }
 
 interface CheckoutProps {
   task: TaskType;
-  changeModalContent: (content: ModalContentType) => void;
+  changeTo: (content: ModalContentType) => void;
 }
 
 interface EditProps {
@@ -43,40 +46,27 @@ interface DeleteProps {
     type: string;
   };
   submit?: () => void;
+  cancel: any;
 }
 
-export const Window: React.FC<WindowProps> = ({
-  isShown,
+const Window: React.FC<WindowProps> = ({
   hide,
+  isShown,
   title,
   content,
+  children,
 }) => {
-  const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    if (event.key === "Escape") hide();
-  }, []);
-
-  useEffect(() => {
-    if (isShown) {
-      document.addEventListener("keydown", handleKeyPress);
-      return () => {
-        document.removeEventListener("keydown", handleKeyPress);
-      };
-    }
-  }, [handleKeyPress, isShown]);
   return (
-    <>
-      {isShown && (
-        <>
-          <Backdrop />
-          <div className="modal-wrapper">
-            <Typography variant="L" className="modal-title">
-              {title}
-            </Typography>
-            <div className="modal-content">{content}</div>
-          </div>
-        </>
-      )}
-    </>
+    <Dialog.Root open={isShown} onOpenChange={() => hide && hide()}>
+      {children}
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="dialog-content">
+          <Dialog.Title>{title}</Dialog.Title>
+          {content}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 
@@ -84,23 +74,27 @@ export const Backdrop: React.FC<{ className?: string }> = ({ className }) => {
   return <div className={classNames("modal-backdrop", className)}></div>;
 };
 
-export const Checkout: React.FC<CheckoutProps> = ({
-  task,
-  changeModalContent,
-}) => {
-  const handleChange = (content: ModalContentType) => {
-    changeModalContent(content);
-  };
-
+export const Checkout: React.FC<CheckoutProps> = ({ task, changeTo }) => {
   return (
     <TaskForm.Form>
-      <Typography variant="L" className="modal-checkout-title">
-        {task.title}
-      </Typography>
-      <Dropdown.Menu className="modal-checkout-dropdown">
-        <Dropdown.Item name={"Edit"} onClick={() => handleChange("edit")} />
-        <Dropdown.Item name={"Delete"} onClick={() => handleChange("delete")} />
-      </Dropdown.Menu>
+      <Typography variant="L">{task.title}</Typography>
+      {/* move this to another component later */}
+      <Popover.Root>
+        <Popover.Trigger className="popover-trigger">
+          <Icon.Ellipsis />
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content className="popover-content">
+            <Typography variant="BodyL" onClick={() => changeTo("edit")}>
+              Edit Task
+            </Typography>
+            <Typography variant="BodyL" onClick={() => changeTo("delete")}>
+              Delete Task
+            </Typography>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
+
       <Typography variant="BodyL">{task.description}</Typography>
       <TaskForm.ListSubTasks type="checkout" subtasks={task.subtasks} />
       <Dropdown.Menu currentValue={task.status}>
@@ -280,15 +274,14 @@ const Add: React.FC<AddProps> = ({ board_id, submit }) => {
   );
 };
 
-export const Delete: React.FC<DeleteProps> = ({ item, submit }) => {
+export const Delete: React.FC<DeleteProps> = ({ item, submit, cancel }) => {
   const handleDelete = () => {
     if (!submit) return;
     submit();
   };
 
   const handleCancel = () => {
-    //implement cancel
-    console.log("cancel");
+    cancel();
   };
 
   return (

@@ -81,17 +81,6 @@ const Upperbar = () => {
 
   return (
     <>
-      <Modal.Window
-        title={"Add task"}
-        content={
-          <Modal.View.Add
-            board_id={currentBoard.id}
-            submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
-          />
-        }
-        isShown={showModal}
-        hide={() => setShowModal(false)}
-      />
       <div className="h-[10vh]">
         <div className="flex flex-row justify-between items-center h-full">
           <div className="p-8">
@@ -106,9 +95,21 @@ const Upperbar = () => {
           </div>
           <div className="flex-1"></div>
           <div className="flex flex-row items-center [&>*]:mx-4">
-            <Button onClick={() => setShowModal(true)} className="w-40 p-3">
-              {/* add styling here later */}+ <span>Add New Task</span>
-            </Button>
+            <Modal.Window
+              title={"Add task"}
+              content={
+                <Modal.View.Add
+                  board_id={currentBoard.id}
+                  submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
+                />
+              }
+              isShown={showModal}
+              hide={() => setShowModal(false)}
+            >
+              <Button onClick={() => setShowModal(true)} className="w-40 p-3">
+                {/* add styling here later */}+ <span>Add New Task</span>
+              </Button>
+            </Modal.Window>
             <Icon.Ellipsis />
           </div>
         </div>
