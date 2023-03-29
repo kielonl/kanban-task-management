@@ -16,7 +16,7 @@ export const TextField: React.FC<TextFieldProps> = ({ label, ...props }) => {
       </div>
       <input
         {...props}
-        className="w-full  p-1 rounded bg-transparent border-[1px] border-thin-grey"
+        className="w-full p-1 rounded bg-transparent border-[1px] border-thin-grey"
       />
     </label>
   );
