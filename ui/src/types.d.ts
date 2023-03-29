@@ -31,3 +31,25 @@ export interface BoardType extends Core {
   name: string;
   columns: ColumnType[];
 }
+
+export interface TaskCreate {
+  title: string;
+  description: string;
+  status: string;
+  subtasks: SubTaskType[];
+}
+
+export interface ColumnCreate {
+  name: Status;
+  id?: string;
+}
+
+export interface BoardCreate {
+  name: string;
+  columns: ColumnCreate[];
+}
+
+export interface ModalProps {
+  title?: string;
+  content: JSX.Element[] | JSX.Element;
+}

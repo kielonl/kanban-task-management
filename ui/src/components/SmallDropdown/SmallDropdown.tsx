@@ -8,8 +8,6 @@ interface SmallDropdownProps {
   className?: string;
 }
 
-//top-12 right-4 fixed flex justify-center items-center
-
 export const SmallDropdown: React.FC<SmallDropdownProps> = ({
   size = 8,
   className,

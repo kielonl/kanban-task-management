@@ -1,28 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAll, create, remove, update, getOne, move } from "../../services";
 import {
-  getAll,
-  create,
-  remove,
-  update,
-  getOne,
+  BoardCreate,
+  BoardType,
+  ColumnType,
   TaskCreate,
-  move,
-} from "../../services";
-import { BoardType, TaskType } from "../../types";
+  TaskType,
+} from "../../types";
 import { ENDPOINT } from "../../utils/constants";
 
 interface BoardState {
   boards: Omit<BoardType[], "created_at" | "updated_at" | "columns">;
-  currentBoard: BoardType;
+  currentBoard: { name: string; id: string; columns: ColumnType[] };
   loading: {
     boards: boolean;
     currentBoard: boolean;
   };
-}
-
-//change later
-interface BoardCreate {
-  name: string;
 }
 
 const initialState: BoardState = {
@@ -51,12 +44,12 @@ export const getBoardsNames = createAsyncThunk(
 
 export const getBoardById = createAsyncThunk(
   "boards/getBoardById",
-  async (id: string, { getState }) => {
+  async (id: string) => {
     return getOne(ENDPOINT.BOARDS, id);
   }
 );
 
-export const addBoard = createAsyncThunk(
+export const createBoard = createAsyncThunk(
   "boards/createBoard",
   async (newBoard: BoardCreate) => {
     await create(ENDPOINT.BOARDS, newBoard);
@@ -74,8 +67,10 @@ export const deleteBoard = createAsyncThunk(
 
 export const updateBoard = createAsyncThunk(
   "boards/updateBoard",
-  async (updatedBoard: BoardType) => {
-    await update(ENDPOINT.BOARDS, updatedBoard.id, updatedBoard);
+  async (updatedBoard: BoardCreate, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    await update(ENDPOINT.BOARDS, boardId, updatedBoard);
     return getAll(ENDPOINT.BOARDS);
   }
 );
@@ -154,6 +149,7 @@ export const boardSlice = createSlice({
     });
     builder.addCase(getBoardById.fulfilled, (state, action) => {
       state.currentBoard = { ...action.payload.board };
+
       state.loading.currentBoard = false;
     });
     builder.addCase(getBoardById.rejected, (state) => {
@@ -171,15 +167,15 @@ export const boardSlice = createSlice({
       state.loading.boards = false;
     });
 
-    builder.addCase(addBoard.pending, (state) => {
+    builder.addCase(createBoard.pending, (state) => {
       state.loading.currentBoard = true;
     });
-    builder.addCase(addBoard.fulfilled, (state, action) => {
+    builder.addCase(createBoard.fulfilled, (state, action) => {
       state.boards = [...action.payload];
       state.loading.currentBoard = false;
     });
 
-    builder.addCase(addBoard.rejected, (state) => {
+    builder.addCase(createBoard.rejected, (state) => {
       state.loading.currentBoard = false;
     });
 

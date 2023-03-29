@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { useTaskDragAndDrop } from "../../hooks/useTaskDragAndDrop";
 import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
-import { TaskProps } from "../../types";
-import { Modal } from "../Modal/Modal";
+import { TaskProps, TaskType } from "../../types";
+import { CheckoutTask } from "../Modal/Views/Task/CheckoutTask";
+import { EditTask } from "../Modal/Views/Task/EditTask";
+import { Delete } from "../Modal/Views/Delete";
 import { Typography } from "../Typography/Typography";
+import { ModalContext } from "../../contexts/ModalContext";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
 export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [openModal, closeModal] = useContext(ModalContext);
   const [modalContent, setModalContent] =
     useState<ModalContentType>("checkout");
   const { title, subtasks } = task;
@@ -21,25 +24,25 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   ).length;
 
   const handleHide = () => {
-    setShowModal(false);
+    closeModal();
     setModalContent(modalContent);
   };
 
-  const modalContents = {
+  const modals = {
     checkout: (
-      <Modal.View.Checkout
+      <CheckoutTask
         task={{ ...task }}
-        changeTo={(content: ModalContentType) => setModalContent(content)}
+        changeTo={(modal: "edit" | "delete") => setModalContent(modal)}
       />
     ),
     edit: (
-      <Modal.View.Edit
+      <EditTask
         task={{ ...task }}
-        submit={(obj) => dispatch(updateTaskApi(obj))}
+        submit={(obj: TaskType) => dispatch(updateTaskApi(obj))}
       />
     ),
     delete: (
-      <Modal.View.Delete
+      <Delete
         item={{ name: title, type: "task" }}
         submit={() => dispatch(deleteTaskApi(task.id))}
         cancel={() => handleHide()}
@@ -54,28 +57,23 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
 
   return (
     <>
-      <Modal.Window
-        content={modalContents[modalContent]}
-        isShown={showModal}
-        hide={() => handleHide()}
+      <div
+        ref={ref}
+        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+        }}
+        onClick={() => {
+          openModal({
+            content: modals[modalContent],
+          });
+        }}
       >
-        <div
-          className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
-          onClick={() => setShowModal(true)}
-          ref={ref}
-          style={{
-            opacity: isDragging ? 0.5 : 1,
-          }}
-        >
-          <Typography variant="M">{title}</Typography>
-          <Typography
-            variant="BodyM"
-            className="text-medium-grey text-bold mt-4"
-          >
-            {doneSubtasks} out of {subtasks.length}
-          </Typography>
-        </div>
-      </Modal.Window>
+        <Typography variant="M">{title}</Typography>
+        <Typography variant="BodyM" className="text-medium-grey text-bold mt-4">
+          {doneSubtasks} out of {subtasks.length}
+        </Typography>
+      </div>
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
 import { ArrowUp } from "../../assets/icons/ArrowUp";
 import { Typography } from "../Typography/Typography";
@@ -31,12 +32,19 @@ const Item: React.FC<DropdownItemProps> = ({ name, onClick }) => {
   );
 };
 
-const Menu: React.FC<DropdownMenuProps> = ({ currentValue, children }) => {
+const Menu: React.FC<DropdownMenuProps> = ({
+  currentValue,
+  className,
+  children,
+}) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
   return (
     <div
       onClick={() => setListOpen(!listOpen)}
-      className={"w-full relative border border-main-purple rounded-lg"}
+      className={twMerge(
+        "w-full relative border border-main-purple rounded-lg",
+        className
+      )}
     >
       <div
         className={
