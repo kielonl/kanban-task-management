@@ -28,7 +28,6 @@ export interface ColumnType extends Core {
 }
 
 export interface BoardType extends Core {
-  currentBoard: any;
   name: string;
   columns: ColumnType[];
 }

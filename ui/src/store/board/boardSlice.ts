@@ -18,8 +18,6 @@ interface BoardState {
   };
 }
 
-//change later
-
 const initialState: BoardState = {
   boards: [],
   currentBoard: {

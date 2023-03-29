@@ -1,5 +1,5 @@
 import { Icon } from "../../assets/icons/Icon";
-import { ColumnCreate, ColumnType, Status, SubTaskType } from "../../types";
+import { ColumnCreate, Status, SubTaskType } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { TextField } from "../TextField/TextField";
