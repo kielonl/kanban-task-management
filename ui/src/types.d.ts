@@ -49,3 +49,8 @@ export interface BoardCreate {
   name: string;
   columns: ColumnCreate[];
 }
+
+export interface ModalProps {
+  title?: string;
+  content: JSX.Element[] | JSX.Element;
+}

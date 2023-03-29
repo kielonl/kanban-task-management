@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { useTaskDragAndDrop } from "../../hooks/useTaskDragAndDrop";
 import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
 import { TaskProps, TaskType } from "../../types";
-import Modal from "../Modal/Modal";
 import { CheckoutTask } from "../Modal/Views/Task/CheckoutTask";
 import { EditTask } from "../Modal/Views/Task/EditTask";
 import { Delete } from "../Modal/Views/Delete";
 import { Typography } from "../Typography/Typography";
+import { ModalContext } from "../../contexts/ModalContext";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
 export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [openModal, closeModal] = useContext(ModalContext);
   const [modalContent, setModalContent] =
     useState<ModalContentType>("checkout");
   const { title, subtasks } = task;
@@ -24,7 +24,7 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   ).length;
 
   const handleHide = () => {
-    setShowModal(false);
+    closeModal();
     setModalContent(modalContent);
   };
 
@@ -57,28 +57,23 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
 
   return (
     <>
-      <Modal
-        trigger={
-          <div
-            ref={ref}
-            className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
-            style={{
-              opacity: isDragging ? 0.5 : 1,
-            }}
-            onClick={() => setShowModal(true)}
-          >
-            <Typography variant="M">{title}</Typography>
-            <Typography
-              variant="BodyM"
-              className="text-medium-grey text-bold mt-4"
-            >
-              {doneSubtasks} out of {subtasks.length}
-            </Typography>
-          </div>
-        }
+      <div
+        ref={ref}
+        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+        }}
+        onClick={() => {
+          openModal({
+            content: modals[modalContent],
+          });
+        }}
       >
-        {modals[modalContent]}
-      </Modal>
+        <Typography variant="M">{title}</Typography>
+        <Typography variant="BodyM" className="text-medium-grey text-bold mt-4">
+          {doneSubtasks} out of {subtasks.length}
+        </Typography>
+      </div>
     </>
   );
 };

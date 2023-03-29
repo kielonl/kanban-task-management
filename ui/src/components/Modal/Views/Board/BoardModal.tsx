@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { BoardCreate, ColumnCreate, Status } from "../../../../types";
+import { BoardCreate, ColumnCreate } from "../../../../types";
+import { isEmpty } from "../../../../utils";
 import { Button } from "../../../Button/Button";
-import { Dropdown } from "../../../Dropdown/Dropdown";
 import { ModalForm } from "../../../Form/Form";
-import { TextArea } from "../../../TextArea/TextArea";
 import { TextField } from "../../../TextField/TextField";
 
 interface BoardModalProps {
-  board: BoardCreate;
+  board?: BoardCreate;
   submit: (board: BoardCreate) => void;
 }
 
@@ -15,10 +14,6 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
   //get all column names from board object
   const [tempBoard, setTempBoard] = useState<BoardCreate>(
     board.board || { name: "", columns: [] }
-  );
-
-  const [tempColumns, setTempColumns] = useState<ColumnCreate[]>(
-    board.board.columns || []
   );
 
   const handleAddColumn = () => {
@@ -42,11 +37,6 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
     setTempBoard({ ...tempBoard, columns });
   };
 
-  const cos = () => {
-    console.log(tempBoard);
-    submit(tempBoard);
-  };
-
   return (
     <ModalForm.Form>
       <TextField
@@ -65,8 +55,8 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
       >
         + Add New Column
       </Button>
-      <Button type="button" onClick={() => cos()}>
-        {board ? "Save Changes" : "Create New Board"}
+      <Button type="button" onClick={() => submit(tempBoard)}>
+        {isEmpty(board) ? "Create New Board" : "Save Changes"}
       </Button>
     </ModalForm.Form>
   );

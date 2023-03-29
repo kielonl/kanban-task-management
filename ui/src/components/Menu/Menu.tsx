@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import {
+  createBoard,
   createTaskApi,
   deleteBoard,
   getBoardsNames,
@@ -22,6 +23,7 @@ import { CreateTask } from "../Modal/Views/Task/CreateTask";
 import { TaskCreate } from "../../types";
 import { BoardModal } from "../Modal/Views/Board/BoardModal";
 import { Delete } from "../Modal/Views/Delete";
+import { ModalContext } from "../../contexts/ModalContext";
 
 interface SidebarProps {
   isShown: boolean;
@@ -82,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
 };
 
 const Upperbar = () => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [openModal, closeModal] = useContext(ModalContext);
   const { currentBoard } = useAppSelector((state) => state.board);
 
   const dispatch = useAppDispatch();
@@ -103,48 +105,60 @@ const Upperbar = () => {
           </div>
           <div className="flex-1"></div>
           <div className="flex flex-row items-center [&>*]:mx-4">
-            <Modal
-              title={"Add task"}
-              trigger={
-                <Button
-                  onClick={() => setShowModal(true)}
-                  className="md:w-40 md:p-3 p-3"
-                >
-                  +{" "}
-                  <span className="hidden md:inline-block ">Add New Task</span>
-                </Button>
+            <Button
+              onClick={() =>
+                openModal({
+                  title: "Add task",
+                  content: (
+                    <CreateTask
+                      submit={(obj: Omit<TaskCreate, "board_id">) =>
+                        dispatch(createTaskApi(obj))
+                      }
+                    />
+                  ),
+                })
               }
+              className="md:w-40 md:p-3 p-3"
             >
-              <CreateTask
-                submit={(obj: Omit<TaskCreate, "board_id">) =>
-                  dispatch(createTaskApi(obj))
-                }
-              />
-            </Modal>
-            <SmallDropdown>
-              <Modal trigger={<Typography>Edit Board</Typography>}>
-                <BoardModal
-                  submit={(obj) => dispatch(updateBoard(obj))}
-                  board={{
-                    name: currentBoard.name,
-                    columns: currentBoard.columns.map((column) => ({
-                      name: column.name,
-                    })),
-                  }}
-                />
-              </Modal>
+              + <span className="hidden md:inline-block ">Add New Task</span>
+            </Button>
 
-              <Modal
-                trigger={
-                  <Typography className="text-red">Delete Board</Typography>
+            <SmallDropdown>
+              <Typography
+                onClick={() =>
+                  openModal({
+                    content: (
+                      <BoardModal
+                        submit={(obj) => dispatch(updateBoard(obj))}
+                        board={{
+                          name: currentBoard.name,
+                          columns: currentBoard.columns.map((column) => ({
+                            name: column.name,
+                          })),
+                        }}
+                      />
+                    ),
+                  })
                 }
               >
-                <Delete
-                  item={{ name: currentBoard.name, type: "board" }}
-                  submit={() => dispatch(deleteBoard(currentBoard.id))}
-                  cancel={() => ""}
-                />
-              </Modal>
+                Edit Board
+              </Typography>
+              <Typography
+                className="text-red"
+                onClick={() =>
+                  openModal({
+                    content: (
+                      <Delete
+                        item={{ name: currentBoard.name, type: "board" }}
+                        submit={() => dispatch(deleteBoard(currentBoard.id))}
+                        cancel={() => closeModal()}
+                      />
+                    ),
+                  })
+                }
+              >
+                Delete Board
+              </Typography>
             </SmallDropdown>
           </div>
         </div>
@@ -154,6 +168,7 @@ const Upperbar = () => {
 };
 
 const BoardNames = () => {
+  const [openModal, closeModal] = useContext(ModalContext);
   const { loading, boards, currentBoard } = useAppSelector(
     (state) => state.board
   );
@@ -186,7 +201,17 @@ const BoardNames = () => {
           </Typography>
         </Link>
       ))}
-      <Typography variant="M" className="text-main-purple cursor-pointer m-4">
+      <Typography
+        variant="M"
+        className="text-main-purple cursor-pointer m-4"
+        onClick={() =>
+          openModal({
+            content: (
+              <BoardModal submit={(obj) => dispatch(createBoard(obj))} />
+            ),
+          })
+        }
+      >
         + Create New Board
       </Typography>
     </div>

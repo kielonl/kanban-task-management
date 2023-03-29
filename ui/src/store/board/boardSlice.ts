@@ -150,7 +150,6 @@ export const boardSlice = createSlice({
       state.loading.currentBoard = true;
     });
     builder.addCase(getBoardById.fulfilled, (state, action) => {
-      console.log(action.payload.board);
       state.currentBoard = { ...action.payload.board };
 
       state.loading.currentBoard = false;
