@@ -1,5 +1,13 @@
 import { callApi } from "../api/callApi";
-import { BoardType, ColumnType, SubTaskType, TaskType } from "../types";
+import {
+  BoardCreate,
+  BoardType,
+  ColumnCreate,
+  ColumnType,
+  SubTaskType,
+  TaskCreate,
+  TaskType,
+} from "../types";
 import { ENDPOINT, HTTP_METHOD } from "../utils/constants";
 //consider keeping the id in the interface
 interface BoardApi
@@ -14,14 +22,6 @@ interface TaskApi
 interface SubTaskApi
   extends Omit<SubTaskType, "created_at" | "updated_at" | "id"> {}
 
-export interface TaskCreate {
-  title: string;
-  description: string;
-  status: string;
-  board_id: string;
-  subtasks: SubTaskType[];
-}
-
 export const getAll = async (endpoint: ENDPOINT) => {
   const response = await callApi(HTTP_METHOD.GET, endpoint);
   return response.data;
@@ -34,7 +34,7 @@ export const getOne = async (endpoint: ENDPOINT, id: string) => {
 
 export const create = async (
   endpoint: ENDPOINT,
-  data: BoardApi | ColumnApi | TaskApi | TaskCreate | SubTaskApi
+  data: BoardCreate | ColumnCreate | TaskCreate | SubTaskApi
 ) => {
   const response = await callApi(HTTP_METHOD.POST, endpoint, data);
   return response.data;
@@ -48,7 +48,7 @@ export const remove = async (endpoint: ENDPOINT, id: string) => {
 export const update = async (
   endpoint: ENDPOINT,
   id: string,
-  data: BoardApi | ColumnApi | TaskApi | SubTaskApi
+  data: BoardCreate | ColumnApi | TaskApi | SubTaskApi
 ) => {
   const response = await callApi(HTTP_METHOD.PUT, `${endpoint}/${id}`, data);
   return response.data;

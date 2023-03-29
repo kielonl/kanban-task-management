@@ -28,6 +28,24 @@ export interface ColumnType extends Core {
 }
 
 export interface BoardType extends Core {
+  currentBoard: any;
   name: string;
   columns: ColumnType[];
+}
+
+export interface TaskCreate {
+  title: string;
+  description: string;
+  status: string;
+  subtasks: SubTaskType[];
+}
+
+export interface ColumnCreate {
+  name: Status;
+  id?: string;
+}
+
+export interface BoardCreate {
+  name: string;
+  columns: ColumnCreate[];
 }

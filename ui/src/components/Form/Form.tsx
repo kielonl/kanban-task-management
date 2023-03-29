@@ -1,6 +1,7 @@
 import { Icon } from "../../assets/icons/Icon";
-import { SubTaskType } from "../../types";
+import { ColumnCreate, ColumnType, Status, SubTaskType } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
+import { Dropdown } from "../Dropdown/Dropdown";
 import { TextField } from "../TextField/TextField";
 import { Typography } from "../Typography/Typography";
 
@@ -17,6 +18,11 @@ interface ListSubTasksProps {
   subtasks: SubTaskType[];
   updateSubtask?: (id: number, field: keyof SubTaskType, value: any) => void;
   deleteSubtask?: (index: number) => void;
+}
+
+interface ListColumnsProps {
+  columns: ColumnCreate[];
+  setColumns: (columns: ColumnCreate[]) => void;
 }
 
 const Form: React.FC<FormProps> = ({ children }) => {
@@ -102,7 +108,56 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
   );
 };
 
-export const TaskForm = {
+const ListColumns: React.FC<ListColumnsProps> = ({ columns, setColumns }) => {
+  //function to change name of column and checks if the name is already taken
+  const changeName = (index: number, name: Status) => {
+    const columnNames = columns.map((column) => column.name);
+    if (columnNames.includes(name)) return;
+    const newColumns = [...columns];
+    newColumns[index].name = name;
+    setColumns(newColumns);
+  };
+
+  const deleteName = (index: number) => {
+    const newColumns = [...columns];
+    newColumns.splice(index, 1);
+    setColumns(newColumns);
+  };
+
+  return (
+    <div>
+      {columns.map((column, index) => {
+        return (
+          <div key={index} className="flex flex-row gap-4">
+            <Dropdown.Menu currentValue={column.name} className="my-2">
+              <Dropdown.Item
+                name="TODO"
+                onClick={() => changeName(index, "TODO")}
+              />
+              <Dropdown.Item
+                name="DOING"
+                onClick={() => changeName(index, "DOING")}
+              />
+              <Dropdown.Item
+                name="DONE"
+                onClick={() => changeName(index, "DONE")}
+              />
+            </Dropdown.Menu>
+            <div
+              className="grid ml-auto cursor-pointer place-content-center"
+              onClick={() => deleteName(index)}
+            >
+              <Icon.Cross />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export const ModalForm = {
   Form,
   ListSubTasks,
+  ListColumns,
 };

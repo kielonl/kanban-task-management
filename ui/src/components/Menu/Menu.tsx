@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { createTaskApi, getBoardsNames } from "../../store/board/boardSlice";
-import { TaskCreate } from "../../services";
+import {
+  createTaskApi,
+  deleteBoard,
+  getBoardsNames,
+  updateBoard,
+} from "../../store/board/boardSlice";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
 import { Logo } from "../Logo/Logo";
-import { Modal } from "../Modal/Modal";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 import { Typography } from "../Typography/Typography";
 
 import classNames from "classnames";
 import * as Popover from "@radix-ui/react-popover";
+import Modal from "../Modal/Modal";
 import { SmallDropdown } from "../SmallDropdown/SmallDropdown";
+import { CreateTask } from "../Modal/Views/Task/CreateTask";
+import { TaskCreate } from "../../types";
+import { BoardModal } from "../Modal/Views/Board/BoardModal";
+import { Delete } from "../Modal/Views/Delete";
 
 interface SidebarProps {
   isShown: boolean;
@@ -95,27 +103,48 @@ const Upperbar = () => {
           </div>
           <div className="flex-1"></div>
           <div className="flex flex-row items-center [&>*]:mx-4">
-            <Modal.Window
+            <Modal
               title={"Add task"}
-              content={
-                <Modal.View.Add
-                  board_id={currentBoard.id}
-                  submit={(obj: TaskCreate) => dispatch(createTaskApi(obj))}
-                />
+              trigger={
+                <Button
+                  onClick={() => setShowModal(true)}
+                  className="md:w-40 md:p-3 p-3"
+                >
+                  +{" "}
+                  <span className="hidden md:inline-block ">Add New Task</span>
+                </Button>
               }
-              isShown={showModal}
-              hide={() => setShowModal(false)}
             >
-              <Button
-                onClick={() => setShowModal(true)}
-                className="md:w-40 md:p-3 p-3"
+              <CreateTask
+                submit={(obj: Omit<TaskCreate, "board_id">) =>
+                  dispatch(createTaskApi(obj))
+                }
+              />
+            </Modal>
+            <SmallDropdown>
+              <Modal trigger={<Typography>Edit Board</Typography>}>
+                <BoardModal
+                  submit={(obj) => dispatch(updateBoard(obj))}
+                  board={{
+                    name: currentBoard.name,
+                    columns: currentBoard.columns.map((column) => ({
+                      name: column.name,
+                    })),
+                  }}
+                />
+              </Modal>
+
+              <Modal
+                trigger={
+                  <Typography className="text-red">Delete Board</Typography>
+                }
               >
-                + <span className="hidden md:inline-block ">Add New Task</span>
-              </Button>
-            </Modal.Window>
-            <SmallDropdown className="">
-              <Typography>Edit Board</Typography>
-              <Typography className="text-red">Delete Board</Typography>
+                <Delete
+                  item={{ name: currentBoard.name, type: "board" }}
+                  submit={() => dispatch(deleteBoard(currentBoard.id))}
+                  cancel={() => ""}
+                />
+              </Modal>
             </SmallDropdown>
           </div>
         </div>
