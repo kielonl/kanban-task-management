@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useFormik } from "formik";
 import { BoardCreate, ColumnCreate } from "../../../../types";
 import { isEmpty } from "../../../../utils";
+import { boardSchema } from "../../../../utils/schemas";
 import { Button } from "../../../Button/Button";
 import { ModalForm } from "../../../Form/Form";
 import { TextField } from "../../../TextField/TextField";
@@ -12,12 +13,21 @@ interface BoardModalProps {
 
 export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
   //get all column names from board object
-  const [tempBoard, setTempBoard] = useState<BoardCreate>(
-    board.board || { name: "", columns: [] }
-  );
+  const { values, handleChange, setFieldValue, errors, handleSubmit } =
+    useFormik({
+      validationSchema: boardSchema,
+      initialValues: {
+        name: board.board?.name || "",
+        columns: board.board?.columns || [],
+      },
+      onSubmit: () => {
+        console.log(values);
+        submit(values);
+      },
+    });
 
   const handleAddColumn = () => {
-    const columns = tempBoard.columns;
+    const columns = values.columns;
     if (columns.length >= 3) return;
     let statuses = ["TODO", "DOING", "DONE"] as ColumnCreate["name"][];
 
@@ -27,26 +37,21 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
       });
     }
 
-    setTempBoard({
-      ...tempBoard,
-      columns: [...columns, { name: statuses[0] }],
-    });
-  };
-
-  const setColumns = (columns: ColumnCreate[]) => {
-    setTempBoard({ ...tempBoard, columns });
+    setFieldValue("columns", [...columns, { name: statuses[0] }]);
   };
 
   return (
     <ModalForm.Form>
       <TextField
         label={"Board Name"}
-        value={tempBoard.name}
-        onChange={(e) => setTempBoard({ ...tempBoard, name: e.target.value })}
+        name="name"
+        error={errors.name}
+        value={values.name}
+        onChange={(e) => handleChange(e)}
       />
       <ModalForm.ListColumns
-        columns={tempBoard.columns}
-        setColumns={setColumns}
+        columns={values.columns}
+        setColumns={(value) => setFieldValue("columns", value)}
       />
       <Button
         type="button"
@@ -55,7 +60,7 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
       >
         + Add New Column
       </Button>
-      <Button type="button" onClick={() => submit(tempBoard)}>
+      <Button type="button" onClick={() => handleSubmit()}>
         {isEmpty(board) ? "Create New Board" : "Save Changes"}
       </Button>
     </ModalForm.Form>

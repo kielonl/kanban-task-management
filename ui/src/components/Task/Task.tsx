@@ -13,8 +13,7 @@ type ModalContentType = "checkout" | "edit" | "delete";
 
 export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
   const [openModal, closeModal] = useContext(ModalContext);
-  const [modalContent, setModalContent] =
-    useState<ModalContentType>("checkout");
+  const [modalContent, setModalContent] = useState<ModalContentType>("edit");
   const { title, subtasks } = task;
 
   const dispatch = useAppDispatch();
