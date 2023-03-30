@@ -30,6 +30,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
           isError ? "border-rose-500 border-[2px]" : "border-thin-grey"
         )}
       />
+      <p className="mt-2 text-sm text-red dark:text-red-500">{error}</p>
     </label>
   );
 };

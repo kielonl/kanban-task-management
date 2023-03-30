@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ModalContext } from "../../contexts/ModalContext";
+import { useAppSelector } from "../../hooks/hooks";
 
 interface ModalProps {
   title?: string;
@@ -9,6 +10,7 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ title, children }) => {
   const [openModal, closeModal] = useContext(ModalContext);
+  const { loading } = useAppSelector((state) => state.board);
 
   return (
     <Dialog.Root open={children !== undefined}>

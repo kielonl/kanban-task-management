@@ -12,19 +12,26 @@ interface CreateProps {
 }
 
 export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
-  const { values, handleChange, setFieldValue, errors, handleSubmit } =
-    useFormik({
-      validationSchema: taskSchema,
-      initialValues: {
-        title: "",
-        description: "",
-        status: "TODO",
-        subtasks: [],
-      },
-      onSubmit: () => {
-        submit(values);
-      },
-    });
+  const {
+    values,
+    handleChange,
+    setFieldValue,
+    errors,
+    handleSubmit,
+    handleBlur,
+  } = useFormik({
+    validationSchema: taskSchema,
+    initialValues: {
+      title: "",
+      description: "",
+      status: "TODO",
+      subtasks: [],
+    },
+    onSubmit: () => {
+      submit(values);
+    },
+    validateOnBlur: true,
+  });
 
   const handleDeleteSubtask = (index: number) => {
     const newSubtasks = values.subtasks.filter((_, i) => i !== index);
@@ -36,21 +43,24 @@ export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
     field: keyof SubTaskType,
     value: any
   ) => {
-    const newSubtasks = values.subtasks.map((subtask, i) => {
-      if (i === index) {
-        return { ...subtask, [field]: value };
+    const newSubtasks = values.subtasks.map(
+      (subtask: TaskCreate["subtasks"], i) => {
+        if (i === index) {
+          return { ...subtask, [field]: value };
+        }
+        return subtask;
       }
-      return subtask;
-    });
+    );
     setFieldValue("subtasks", newSubtasks);
   };
-
+  console.log(errors.subtasks);
   return (
     <ModalForm.Form>
       <TextField
         label={"Title"}
         name="title"
         error={errors.title}
+        onBlur={(e) => handleBlur(e)}
         onChange={(e) => handleChange(e)}
       />
       <TextArea
@@ -70,12 +80,13 @@ export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
       <Button
         type="button"
         variant="secondary"
-        onClick={() =>
+        onClick={() => {
+          if (values.subtasks.length >= 3) return;
           setFieldValue("subtasks", [
             ...values.subtasks,
             { isCompleted: false, title: "" },
-          ])
-        }
+          ]);
+        }}
       >
         + Add New Subtask
       </Button>

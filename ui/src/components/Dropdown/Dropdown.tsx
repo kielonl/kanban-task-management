@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ArrowDown } from "../../assets/icons/ArrowDown";
@@ -38,9 +38,25 @@ const Menu: React.FC<DropdownMenuProps> = ({
   children,
 }) => {
   const [listOpen, setListOpen] = useState<boolean>(false);
+  const ref = useRef<any>(null);
+  //close list when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setListOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+
   return (
     <div
-      onClick={() => setListOpen(!listOpen)}
+      ref={ref}
+      onClick={() => setListOpen(true)}
+      id="dropdown"
       className={twMerge(
         "w-full relative border border-main-purple rounded-lg",
         className
@@ -61,7 +77,7 @@ const Menu: React.FC<DropdownMenuProps> = ({
         <Typography
           variant="BodyM"
           role="list"
-          className="absolute w-full flex flex-col mt-0.5 rounded-lg text-gray-600 bg-white overflow-y-scroll cursor-pointer first:pt-4 last:pb-4  dark:bg-very-dark-grey"
+          className="absolute w-full flex flex-col mt-0.5 rounded-lg text-gray-600 bg-white z-[1]  overflow-y-scroll cursor-pointer first:pt-4 last:pb-4  dark:bg-very-dark-grey"
         >
           {children}
         </Typography>

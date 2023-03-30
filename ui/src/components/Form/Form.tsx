@@ -82,7 +82,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
             />
           </div>
           <div
-            className="grid ml-auto cursor-pointer place-content-center"
+            className="grid ml-auto cursor-pointer place-content-center justify-center mb-5"
             onClick={() => handleDeleteSubtask(index)}
           >
             <Icon.Cross />

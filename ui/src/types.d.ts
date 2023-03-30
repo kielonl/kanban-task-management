@@ -41,7 +41,7 @@ export interface TaskCreate {
 
 export interface ColumnCreate {
   name: Status;
-  id?: string;
+  board_id?: string;
 }
 
 export interface BoardCreate {

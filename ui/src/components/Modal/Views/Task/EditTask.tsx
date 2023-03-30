@@ -5,7 +5,6 @@ import { ModalForm } from "../../../Form/Form";
 import { TextArea } from "../../../TextArea/TextArea";
 import { TextField } from "../../../TextField/TextField";
 import { useFormik } from "formik";
-import { isEmpty } from "../../../../utils";
 import { taskSchema } from "../../../../utils/schemas";
 
 interface EditProps {
