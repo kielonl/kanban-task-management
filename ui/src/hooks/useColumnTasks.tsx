@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { moveTaskApi } from "../store/board/boardSlice";
 import { Status, TaskType } from "../types";
+import { swap } from "../utils";
 import { useAppDispatch, useAppSelector } from "./hooks";
 
 export const useColumnTasks = (column: Status) => {
@@ -59,5 +60,19 @@ export const useColumnTasks = (column: Status) => {
     [column, setTasks]
   );
 
-  return { tasks: columnTasks, dropTaskFrom };
+  const swapTasks = useCallback(
+    (i: number, j: number) => {
+      setTasks((allTasks) => {
+        if (!allTasks) return allTasks;
+        const columnTasks = allTasks[column];
+        return {
+          ...allTasks,
+          [column]: swap(columnTasks, i, j),
+        };
+      });
+    },
+    [column, setTasks]
+  );
+
+  return { tasks: columnTasks, dropTaskFrom, swapTasks };
 };

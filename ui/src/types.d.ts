@@ -19,6 +19,7 @@ export interface TaskType extends Core {
 
 export interface TaskProps extends TaskType {
   index: number;
+  onDropHover: (i: number, j: number) => void;
 }
 
 export interface ColumnType extends Core {

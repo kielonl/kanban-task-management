@@ -11,7 +11,7 @@ import { ModalContext } from "../../contexts/ModalContext";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
-export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
+export const Task: React.FC<TaskProps> = ({ index, onDropHover, ...task }) => {
   const [openModal, closeModal] = useContext(ModalContext);
   const [modalContent, setModalContent] =
     useState<ModalContentType>("checkout");
@@ -57,10 +57,13 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
     ),
   };
 
-  const { ref, isDragging } = useTaskDragAndDrop<HTMLDivElement>({
-    task,
-    index,
-  });
+  const { ref, isDragging } = useTaskDragAndDrop<HTMLDivElement>(
+    {
+      task,
+      index,
+    },
+    onDropHover
+  );
 
   return (
     <>
