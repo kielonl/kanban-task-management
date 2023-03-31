@@ -24,16 +24,22 @@ export const getSubtaskById = async (id: string) => {
   return subtask;
 };
 
-export const updateSubtask = async (id: string, input: SubtaskSchema) => {
-  const subtask = await prisma.subtask.update({
-    where: {
-      id,
-    },
-    data: {
-      ...input,
-    },
-  });
-  return subtask;
+export const updateSubtask = async (id: string, input: SubtaskSchema[]) => {
+  const updatedSubtasks = await Promise.all(
+    input.map(async (subtask) => {
+      const updatedSubtask = await prisma.subtask.update({
+        where: {
+          id: subtask.id,
+        },
+        data: {
+          ...subtask,
+        },
+      });
+      return updatedSubtask;
+    })
+  );
+
+  return updatedSubtasks;
 };
 
 export const deleteSubtask = async (id: string) => {

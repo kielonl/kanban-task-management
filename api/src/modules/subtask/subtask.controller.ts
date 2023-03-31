@@ -57,7 +57,7 @@ export const getSubtaskByIdHandler = async (
 };
 
 export const updateSubtaskHandler = async (
-  request: FastifyRequest<{ Body: SubtaskSchema; Params: { id: string } }>,
+  request: FastifyRequest<{ Body: SubtaskSchema[]; Params: { id: string } }>,
   reply: FastifyReply
 ) => {
   try {

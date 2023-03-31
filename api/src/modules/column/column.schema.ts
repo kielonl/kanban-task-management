@@ -1,13 +1,12 @@
 import { z } from "zod";
 
+const STATUS = ["TODO", "DOING", "DONE"] as const;
+
 const ColumnSchema = z.object({
-  name: z
-    .string({
-      invalid_type_error: "name must be a string",
-      required_error: "name is required",
-    })
-    .min(1)
-    .max(100),
+  name: z.enum(STATUS, {
+    invalid_type_error: "Status must be a string",
+    required_error: "status must be one of todo, doing, done",
+  }),
   board_id: z.string().uuid(),
 });
 

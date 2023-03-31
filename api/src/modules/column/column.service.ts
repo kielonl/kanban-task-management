@@ -2,6 +2,15 @@ import prisma from "../../utils/prisma";
 import { ColumnSchema } from "./column.schema";
 
 export const createColumn = async (input: ColumnSchema) => {
+  const columnExists = await prisma.column.findFirst({
+    where: {
+      name: input.name,
+      board_id: input.board_id,
+    },
+  });
+
+  if (columnExists) throw new Error("Column already exists");
+
   const column = await prisma.column.create({
     data: {
       ...input,

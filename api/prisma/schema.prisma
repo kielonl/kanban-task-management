@@ -19,7 +19,7 @@ model column {
   id         String    @id(map: "column1_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   created_at DateTime? @default(now()) @db.Timestamptz(6)
   updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  name       String
+  name       Status
   board_id   String    @db.Uuid
   board      board     @relation(fields: [board_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tasks      task[]
@@ -31,8 +31,8 @@ model task {
   updated_at  DateTime? @default(now()) @db.Timestamptz(6)
   title       String
   description String
-  status      Status    @default(TODO)
   column_id   String    @db.Uuid
+  status      Status?
   subtasks    subtask[]
   column      column    @relation(fields: [column_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -44,7 +44,7 @@ model subtask {
   title       String
   isCompleted Boolean   @default(false)
   task_id     String    @db.Uuid
-  task        task      @relation(fields: [task_id], references: [id])
+  task        task      @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum Status {

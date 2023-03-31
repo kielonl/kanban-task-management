@@ -21,7 +21,14 @@ const TaskSchema = z.object({
     invalid_type_error: "Status must be a string",
     required_error: "status must be one of todo, doing, done",
   }),
-  column_id: z.string().uuid(),
+  board_id: z.string().uuid(),
+  subtasks: z.array(
+    z.object({
+      title: z.string().min(1).max(100),
+      isCompleted: z.boolean(),
+      task_id: z.string().uuid(),
+    })
+  ),
 });
 
 export type TaskSchema = z.infer<typeof TaskSchema>;

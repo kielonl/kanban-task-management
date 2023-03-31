@@ -1,3 +1,4 @@
+import { Status } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { TaskSchema } from "./task.schema";
 import {
@@ -6,6 +7,7 @@ import {
   getTasks,
   getTaskById,
   updateTask,
+  moveTask,
 } from "./task.service";
 
 export const createTaskHandler = async (
@@ -66,6 +68,34 @@ export const updateTaskHandler = async (
     const { id } = request.params;
     const body = request.body;
     const task = await updateTask(id, body);
+
+    if (!task) {
+      reply.code(404).send({ error: "task not found" });
+    }
+
+    reply.code(200).send({ task });
+  } catch (error) {
+    console.log(error);
+    reply.code(500).send({ error: "Internal server error" });
+  }
+};
+
+export const moveTaskHandler = async (
+  request: FastifyRequest<{
+    Params: { id: string };
+    Body: { oldColumn: string; newColumn: string };
+  }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { id } = request.params;
+    const { oldColumn, newColumn } = request.body;
+    const task = await moveTask(
+      id,
+      "bed4eb79-2b2d-48c1-b427-5611f0ddb5cc",
+      oldColumn as Status,
+      newColumn as Status
+    );
 
     if (!task) {
       reply.code(404).send({ error: "task not found" });
