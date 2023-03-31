@@ -1,7 +1,11 @@
 import { useContext, useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { useTaskDragAndDrop } from "../../hooks/useTaskDragAndDrop";
-import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
+import {
+  deleteTaskApi,
+  updateSubtaskApi,
+  updateTaskApi,
+} from "../../store/board/boardSlice";
 import { TaskProps, TaskType } from "../../types";
 import { CheckoutTask } from "../Modal/Views/Task/CheckoutTask";
 import { EditTask } from "../Modal/Views/Task/EditTask";
@@ -11,7 +15,7 @@ import { ModalContext } from "../../contexts/ModalContext";
 
 type ModalContentType = "checkout" | "edit" | "delete";
 
-export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
+export const Task: React.FC<TaskProps> = ({ index, onDropHover, ...task }) => {
   const [openModal, closeModal] = useContext(ModalContext);
   const [modalContent, setModalContent] =
     useState<ModalContentType>("checkout");
@@ -28,11 +32,18 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
     setModalContent(modalContent);
   };
 
+  const handleChangeModal = (newModal: ModalContentType) => {
+    closeModal();
+    openModal({
+      content: modals[newModal],
+    });
+  };
+
   const modals = {
     checkout: (
       <CheckoutTask
         task={{ ...task }}
-        changeTo={(modal: "edit" | "delete") => setModalContent(modal)}
+        changeTo={(modal: "edit" | "delete") => handleChangeModal(modal)}
       />
     ),
     edit: (
@@ -50,16 +61,19 @@ export const Task: React.FC<TaskProps> = ({ index, ...task }) => {
     ),
   };
 
-  const { ref, isDragging } = useTaskDragAndDrop<HTMLDivElement>({
-    task,
-    index,
-  });
+  const { ref, isDragging } = useTaskDragAndDrop<HTMLDivElement>(
+    {
+      task,
+      index,
+    },
+    onDropHover
+  );
 
   return (
     <>
       <div
         ref={ref}
-        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
+        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white cursor-pointer  "
         style={{
           opacity: isDragging ? 0.5 : 1,
         }}

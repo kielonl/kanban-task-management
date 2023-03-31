@@ -1,17 +1,22 @@
 import React, { useContext } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ModalContext } from "../../contexts/ModalContext";
+import { useAppSelector } from "../../hooks/hooks";
 
 interface ModalProps {
   title?: string;
   children: JSX.Element;
+  onClose?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ title, children }) => {
+const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
   const [openModal, closeModal] = useContext(ModalContext);
 
   return (
-    <Dialog.Root open={children !== undefined}>
+    <Dialog.Root
+      open={children !== undefined}
+      onOpenChange={() => onClose && onClose()}
+    >
       <Dialog.Portal>
         <Dialog.Overlay
           className="bg-black-opacity data-[state=open]:animate-overlayShow fixed inset-0 "

@@ -31,13 +31,13 @@ export const Typography: React.FC<TypographyProps> = ({
     L: "font-bold text-lg leading-6",
     M: "font-bold text-sm leading-5",
     S: "font-bold text-xs leading-4 tracking-[2.4px]",
-    BodyL: "font-normal text-xs leading-6",
-    BodyM: "font-normal text-xs leading-4",
+    BodyL: "font-normal text-xs leading-6 text-grey dark:text-white",
+    BodyM: "font-normal text-xs leading-4 text-dark-grey dark:text-medium-grey",
   };
 
   return (
     <Component
-      className={twMerge(className, variantClass[variant || "BodyL"])}
+      className={twMerge(variantClass[variant || "BodyL"], className)}
       {...props}
     >
       {children}

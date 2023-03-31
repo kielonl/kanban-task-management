@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
+import { Typography } from "../Typography/Typography";
 interface ButtonProps
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -34,7 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
       className={twMerge(
         classNames(
-          "w-full no-underline font-bol text-xs leading-6 text-center cursor-pointer rounded-[20px] py-4 focus:outline-none focus:shadow-outline"
+          "w-full no-underline font-bol text-xs leading-6 text-center cursor-pointer rounded-[20px] py-3 focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         className,
         sizeClass[size || "small"],

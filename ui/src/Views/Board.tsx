@@ -2,28 +2,48 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import { Column } from "../components/Column/Column";
 import { Loader } from "../components/Loader/Loader";
-import { useColumnCollection } from "../hooks/useColumnCollection";
-import { Button } from "../components/Button/Button";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { getBoardById } from "../store/board/boardSlice";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import NoColumns from "../components/NoColumns/NoColumns";
+import AddColumn from "../components/AddColumnButton/AddColumn";
+import { Status } from "../types";
 
 export const Board = () => {
-  const { columns, loading } = useColumnCollection();
+  const { currentBoard, loading } = useAppSelector((state) => state.board);
+  const { columns } = currentBoard;
+  const { boardId } = useParams<{ boardId: string }>();
 
-  if (!loading && !columns?.length)
-    return (
-      <div className="h-full flex items-center justify-center flex-col text-gray-600 bg-light-grey dark:bg-very-dark-grey">
-        no columns added yet
-        <Button className="w-40">+ Add Column</Button>
-      </div>
-    );
-  if (loading) return <Loader />;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!boardId) return;
+    dispatch(getBoardById(boardId));
+  }, [boardId]);
+
+  if (!loading.currentBoard && !columns?.length) return <NoColumns />;
+
+  const columnsNames = columns.map((column) => column.name);
+  const availableColumns = ["TODO", "DOING", "DONE"] as Status[];
+
+  const columnsToAdd = availableColumns.filter(
+    (column) => !columnsNames.includes(column)
+  );
 
   return (
-    <div className="h-full overflow-x-scroll p-8 text-gray-600 flex flex-row gap-8 bg-light-grey dark:bg-very-dark-grey">
-      <DndProvider backend={HTML5Backend}>
-        {columns?.map((column) => (
-          <Column key={column.id} name={column.name} />
-        ))}
-      </DndProvider>
-    </div>
+    <>
+      <div className="h-full overflow-x-scroll p-8 text-gray-600 flex flex-row gap-8 bg-light-grey dark:bg-very-dark-grey">
+        {loading.currentBoard && <Loader />}
+        <DndProvider backend={HTML5Backend}>
+          {columns?.map((column) => (
+            <Column key={column.id} name={column.name} />
+          ))}
+          {columns.length > 0 && columns.length < 3 && (
+            <AddColumn name={columnsToAdd[0]} />
+          )}
+        </DndProvider>
+      </div>
+    </>
   );
 };

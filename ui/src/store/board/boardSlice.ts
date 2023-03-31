@@ -3,7 +3,10 @@ import { getAll, create, remove, update, getOne, move } from "../../services";
 import {
   BoardCreate,
   BoardType,
+  ColumnCreate,
   ColumnType,
+  SubtaskCreate,
+  SubTaskType,
   TaskCreate,
   TaskType,
 } from "../../types";
@@ -96,7 +99,6 @@ export const createTaskApi = createAsyncThunk(
   async (task: TaskCreate, { getState }) => {
     const state = getState() as { board: BoardState };
     const boardId = state.board.currentBoard.id;
-    //move this to some better place
     if (
       Object.values(task).some((value) => value === "") ||
       Object.values(task).some((value) => value === null)
@@ -135,6 +137,38 @@ export const moveTaskApi = createAsyncThunk(
     const state = getState() as { board: BoardState };
     const boardId = state.board.currentBoard.id;
     await move(ENDPOINT.MOVE, id, { boardId, oldColumn, newColumn });
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
+export const createColumnApi = createAsyncThunk(
+  "column/createColumn",
+  async (column: ColumnCreate, { getState }) => {
+    const state = getState() as { board: BoardState };
+    const board_id = state.board.currentBoard.id;
+    await create(ENDPOINT.COLUMNS, { ...column, board_id });
+    return getOne(ENDPOINT.BOARDS, board_id);
+  }
+);
+
+export const updateSubtaskApi = createAsyncThunk(
+  "subtask/updateSubtask",
+  async (
+    subtask: {
+      id: string;
+      subtasks: SubTaskType[];
+    },
+    { getState }
+  ) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    if (
+      Object.values(subtask).some((value) => value === "") ||
+      Object.values(subtask).some((value) => value === null)
+    ) {
+      return;
+    }
+    await update(ENDPOINT.SUBTASKS, subtask.id, subtask.subtasks);
     return getOne(ENDPOINT.BOARDS, boardId);
   }
 );
@@ -242,6 +276,30 @@ export const boardSlice = createSlice({
       state.loading.currentBoard = false;
     });
     builder.addCase(moveTaskApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(createColumnApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+    builder.addCase(createColumnApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+    builder.addCase(createColumnApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateSubtaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+
+    builder.addCase(updateSubtaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateSubtaskApi.rejected, (state) => {
       state.loading.currentBoard = false;
     });
   },

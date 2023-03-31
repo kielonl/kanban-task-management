@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../assets/icons/Icon";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
@@ -17,7 +17,6 @@ import { Typography } from "../Typography/Typography";
 
 import classNames from "classnames";
 import * as Popover from "@radix-ui/react-popover";
-import Modal from "../Modal/Modal";
 import { SmallDropdown } from "../SmallDropdown/SmallDropdown";
 import { CreateTask } from "../Modal/Views/Task/CreateTask";
 import { TaskCreate } from "../../types";
@@ -83,7 +82,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isShown, setIsShown }) => {
   );
 };
 
-const Upperbar = () => {
+const Upperbar: React.FC<{ isSidebarShown: boolean }> = ({
+  isSidebarShown,
+}) => {
   const [openModal, closeModal] = useContext(ModalContext);
   const { currentBoard } = useAppSelector((state) => state.board);
 
@@ -94,11 +95,12 @@ const Upperbar = () => {
       <div className="h-[10vh] dark:bg-dark-grey dark:text-white">
         <div className="flex flex-row justify-between items-center h-full">
           <div className="p-8">
-            {/* maybe add loader here later.
-            deleted now because it was causing problems */}
-            <Typography variant="XL" className="hidden sm:block">
-              {currentBoard.name}
-            </Typography>
+            <div className="flex flex-row gap-4 h-full">
+              {!isSidebarShown && <Logo />}
+              <Typography variant="XL" className="hidden sm:block">
+                {currentBoard.name}
+              </Typography>
+            </div>
             <div className="sm:hidden block">
               <NavMenuMobile name={currentBoard.name} />
             </div>
@@ -106,6 +108,7 @@ const Upperbar = () => {
           <div className="flex-1"></div>
           <div className="flex flex-row items-center [&>*]:mx-4">
             <Button
+              disabled={!currentBoard.id || !currentBoard.columns.length}
               onClick={() =>
                 openModal({
                   title: "Add task",
@@ -144,7 +147,7 @@ const Upperbar = () => {
                 Edit Board
               </Typography>
               <Typography
-                className="text-red"
+                className="text-red dark:text-red"
                 onClick={() =>
                   openModal({
                     content: (
@@ -178,29 +181,33 @@ const BoardNames = () => {
     dispatch(getBoardsNames());
   }, []);
 
+  const renderBoards = () => {
+    return boards.map((board, index: number) => (
+      <Link to={`/board/${board.id}`} key={index}>
+        <Typography
+          variant="M"
+          className={classNames(
+            "w-[80%] text-medium-grey flex gap-2 cursor-pointer py-3 px-4 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
+            board.id === currentBoard.id &&
+              "bg-main-purple text-white hover:bg-main-purple hover:text-white"
+          )}
+          key={board.id}
+        >
+          <Icon.Board />
+          {board.name}
+        </Typography>
+      </Link>
+    ));
+  };
+
   if (loading.boards || !boards.length) return <Loader />;
 
   return (
     <div className="flex flex-col h-full overflow-y-auto last:pl-4 last:pb-4">
-      <Typography variant="S" className="p-4">
+      <Typography variant="S" className="p-4 text-grey dark:text-grey">
         ALL BOARDS ({boards.length})
       </Typography>
-      {boards.map((board, index: number) => (
-        <Link to={`/board/${board.id}`} key={index}>
-          <Typography
-            variant="M"
-            className={classNames(
-              "w-[80%] text-medium-grey flex gap-2 cursor-pointer py-3 px-4 rounded-r-full hover:text-main-purple hover:bg-main-purple-light",
-              board.id === currentBoard.id &&
-                "bg-main-purple text-white hover:bg-main-purple hover:text-white"
-            )}
-            key={board.id}
-          >
-            <Icon.Board />
-            {board.name}
-          </Typography>
-        </Link>
-      ))}
+      {renderBoards()}
       <Typography
         variant="M"
         className="text-main-purple cursor-pointer m-4"
@@ -212,7 +219,9 @@ const BoardNames = () => {
           })
         }
       >
-        + Create New Board
+        <div className="flex flex-row gap-2 align-center">
+          <Icon.Board className="fill-main-purple" />+ Create New Board
+        </div>
       </Typography>
     </div>
   );

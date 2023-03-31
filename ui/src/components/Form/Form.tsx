@@ -1,5 +1,5 @@
 import { Icon } from "../../assets/icons/Icon";
-import { ColumnCreate, Status, SubTaskType } from "../../types";
+import { ColumnCreate, Status, SubtaskCreate, SubTaskType } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { TextField } from "../TextField/TextField";
@@ -44,7 +44,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
 
   const handleEditSubtaskCompletion = (index: number) => {
     if (!updateSubtask) return;
-    updateSubtask(index, "isCompleted", true);
+    updateSubtask(index, "isCompleted", !subtasks[index].isCompleted);
   };
 
   const handleDeleteSubtask = (index: number) => {
@@ -66,6 +66,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
         setChecked={() => handleEditSubtaskCompletion(index)}
         id={String(index)}
         key={index}
+        className="mb-3"
       />
     );
   });
@@ -82,7 +83,7 @@ const ListSubTasks: React.FC<ListSubTasksProps> = ({
             />
           </div>
           <div
-            className="grid ml-auto cursor-pointer place-content-center"
+            className="grid ml-auto cursor-pointer place-content-center justify-center mb-5"
             onClick={() => handleDeleteSubtask(index)}
           >
             <Icon.Cross />
