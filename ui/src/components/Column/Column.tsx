@@ -11,7 +11,7 @@ interface ColumnProps {
 }
 
 export const Column: React.FC<ColumnProps> = ({ name }) => {
-  const { tasks, dropTaskFrom } = useColumnTasks(name);
+  const { tasks, dropTaskFrom, swapTasks } = useColumnTasks(name);
   const { dropRef, isOver } = useColumnDrop(name, dropTaskFrom);
 
   const amountOfTasks = tasks?.length || 0;
@@ -25,7 +25,9 @@ export const Column: React.FC<ColumnProps> = ({ name }) => {
   const renderTasks = () => {
     if (tasks !== undefined) {
       return tasks.map((task: TaskType, index: number) => {
-        return <Task {...task} index={index} key={task.id} />;
+        return (
+          <Task {...task} onDropHover={swapTasks} index={index} key={task.id} />
+        );
       });
     }
   };

@@ -19,6 +19,7 @@ export interface TaskType extends Core {
 
 export interface TaskProps extends TaskType {
   index: number;
+  onDropHover: (i: number, j: number) => void;
 }
 
 export interface ColumnType extends Core {
@@ -41,12 +42,18 @@ export interface TaskCreate {
 
 export interface ColumnCreate {
   name: Status;
-  id?: string;
+  board_id?: string;
 }
 
 export interface BoardCreate {
   name: string;
   columns: ColumnCreate[];
+}
+
+export interface SubtaskCreate {
+  title: string;
+  isCompleted: boolean;
+  id: string;
 }
 
 export interface ModalProps {

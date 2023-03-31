@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { Typography } from "../Typography/Typography";
 
 interface TextFieldProps
@@ -5,19 +6,31 @@ interface TextFieldProps
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
+  error?: string | string[] | never[] | undefined;
   label: string;
 }
 
-export const TextField: React.FC<TextFieldProps> = ({ label, ...props }) => {
+export const TextField: React.FC<TextFieldProps> = ({
+  label,
+  error,
+  ...props
+}) => {
+  const isError = error?.length;
   return (
     <label className="flex flex-col">
       <div className="capitalize mb-1">
-        <Typography variant="BodyM">{label}</Typography>
+        <Typography variant="BodyM" className={isError ? "text-red" : ""}>
+          {label}
+        </Typography>
       </div>
       <input
         {...props}
-        className="w-full  p-1 rounded bg-transparent border-[1px] border-thin-grey"
+        className={classNames(
+          "w-full  p-1 rounded bg-transparent border-[1px]",
+          isError ? "border-rose-500 border-[2px]" : "border-thin-grey"
+        )}
       />
+      <p className="mt-2 text-sm text-red dark:text-red-500">{error}</p>
     </label>
   );
 };

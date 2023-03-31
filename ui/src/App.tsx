@@ -4,10 +4,12 @@ import { Root } from "./Views/Root";
 import { Provider } from "react-redux";
 import { rootStore } from "./store/store";
 import "./App.css";
-import ModalContextProvider from "./contexts/ModalContetProvider";
+import ModalContextProvider from "./contexts/ModalContextProvider";
+import { load } from "./services/StorageManager";
 
 function App() {
-  const [theme, setTheme] = useState("light");
+  const themeStorage = load("theme") || "dark";
+  const [theme, setTheme] = useState(themeStorage.theme);
 
   return (
     <Provider store={rootStore}>
