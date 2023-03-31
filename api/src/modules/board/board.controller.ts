@@ -5,6 +5,7 @@ import {
   deleteBoard,
   getBoardById,
   getBoards,
+  getBoardsNames,
   updateBoard,
 } from "./board.service";
 
@@ -30,7 +31,21 @@ export const getBoardsHandler = async (
   try {
     const board = await getBoards();
 
-    reply.code(200).send({ board });
+    reply.code(200).send(board);
+  } catch (error) {
+    console.log(error);
+    reply.code(500).send({ error: "Internal server error" });
+  }
+};
+
+export const getBoardsNamesHandler = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  try {
+    const board = await getBoardsNames();
+
+    reply.code(200).send(board);
   } catch (error) {
     console.log(error);
     reply.code(500).send({ error: "Internal server error" });
