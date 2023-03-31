@@ -5,6 +5,8 @@ import {
   BoardType,
   ColumnCreate,
   ColumnType,
+  SubtaskCreate,
+  SubTaskType,
   TaskCreate,
   TaskType,
 } from "../../types";
@@ -150,6 +152,29 @@ export const createColumnApi = createAsyncThunk(
   }
 );
 
+export const updateSubtaskApi = createAsyncThunk(
+  "subtask/updateSubtask",
+  async (
+    subtask: {
+      id: string;
+      subtasks: SubTaskType[];
+    },
+    { getState }
+  ) => {
+    const state = getState() as { board: BoardState };
+    const boardId = state.board.currentBoard.id;
+    if (
+      Object.values(subtask).some((value) => value === "") ||
+      Object.values(subtask).some((value) => value === null)
+    ) {
+      return;
+    }
+    console.log(subtask);
+    await update(ENDPOINT.SUBTASKS, subtask.id, subtask.subtasks);
+    return getOne(ENDPOINT.BOARDS, boardId);
+  }
+);
+
 export const boardSlice = createSlice({
   name: "boards",
   initialState,
@@ -264,6 +289,19 @@ export const boardSlice = createSlice({
       state.loading.currentBoard = false;
     });
     builder.addCase(createColumnApi.rejected, (state) => {
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateSubtaskApi.pending, (state) => {
+      state.loading.currentBoard = true;
+    });
+
+    builder.addCase(updateSubtaskApi.fulfilled, (state, action) => {
+      state.currentBoard = { ...action.payload.board };
+      state.loading.currentBoard = false;
+    });
+
+    builder.addCase(updateSubtaskApi.rejected, (state) => {
       state.loading.currentBoard = false;
     });
   },

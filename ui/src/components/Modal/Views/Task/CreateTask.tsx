@@ -1,4 +1,4 @@
-import { SubTaskType, TaskCreate } from "../../../../types";
+import { SubtaskCreate, SubTaskType, TaskCreate } from "../../../../types";
 import { Button } from "../../../Button/Button";
 import { Dropdown } from "../../../Dropdown/Dropdown";
 import { ModalForm } from "../../../Form/Form";
@@ -40,7 +40,7 @@ export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
 
   const handleUpdateSubtask = (
     index: number,
-    field: keyof SubTaskType,
+    field: keyof SubtaskCreate,
     value: any
   ) => {
     const newSubtasks = values.subtasks.map(
@@ -72,9 +72,11 @@ export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
       <ModalForm.ListSubTasks
         type={"add"}
         subtasks={values.subtasks}
-        updateSubtask={(index: number, field: keyof SubTaskType, value: any) =>
-          handleUpdateSubtask(index, field, value)
-        }
+        updateSubtask={(
+          index: number,
+          field: keyof SubtaskCreate,
+          value: any
+        ) => handleUpdateSubtask(index, field, value)}
         deleteSubtask={(index: number) => handleDeleteSubtask(index)}
       />
       <Button

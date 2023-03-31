@@ -50,6 +50,12 @@ export interface BoardCreate {
   columns: ColumnCreate[];
 }
 
+export interface SubtaskCreate {
+  title: string;
+  isCompleted: boolean;
+  id: string;
+}
+
 export interface ModalProps {
   title?: string;
   content: JSX.Element[] | JSX.Element;

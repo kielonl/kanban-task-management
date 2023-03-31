@@ -19,3 +19,13 @@ export let boardSchema = object({
     })
   ),
 });
+
+export let checkoutSchema = object({
+  status: string().required().oneOf(["TODO", "DOING", "DONE"]),
+  subtasks: array().of(
+    object().shape({
+      title: string().required().min(3).max(50),
+      isCompleted: boolean().required(),
+    })
+  ),
+});

@@ -6,7 +6,9 @@ import { ModalContext } from "./ModalContext";
 const ModalContextProvider = ({ children }: any) => {
   const [modal, setModal] = useState<ModalProps | undefined>();
 
-  const openModal = (modal: ModalProps) => setModal(modal);
+  const openModal = (modal: ModalProps) => {
+    setModal({ ...modal });
+  };
   const closeModal = () => setModal(undefined);
 
   return (

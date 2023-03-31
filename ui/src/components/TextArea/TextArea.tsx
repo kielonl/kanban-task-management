@@ -26,7 +26,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
       <textarea
         {...props}
         className={classNames(
-          "w-full h-12 p-1 resize-none rounded bg-transparent border-[1px] text-black dark:text-white",
+          "w-full h-24 p-1 resize-none rounded bg-transparent border-[1px] text-black dark:text-white",
           isError ? "border-rose-500 border-[2px]" : "border-thin-grey"
         )}
       />

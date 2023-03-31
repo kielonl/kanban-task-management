@@ -1,7 +1,11 @@
 import { useContext, useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { useTaskDragAndDrop } from "../../hooks/useTaskDragAndDrop";
-import { deleteTaskApi, updateTaskApi } from "../../store/board/boardSlice";
+import {
+  deleteTaskApi,
+  updateSubtaskApi,
+  updateTaskApi,
+} from "../../store/board/boardSlice";
 import { TaskProps, TaskType } from "../../types";
 import { CheckoutTask } from "../Modal/Views/Task/CheckoutTask";
 import { EditTask } from "../Modal/Views/Task/EditTask";
@@ -69,7 +73,7 @@ export const Task: React.FC<TaskProps> = ({ index, onDropHover, ...task }) => {
     <>
       <div
         ref={ref}
-        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white"
+        className="flex flex-col z-0 bg-white p-6 rounded-lg w-[15em] drop-shadow-lg dark:bg-dark-grey dark:text-white cursor-pointer  "
         style={{
           opacity: isDragging ? 0.5 : 1,
         }}
