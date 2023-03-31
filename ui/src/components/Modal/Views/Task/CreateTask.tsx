@@ -53,7 +53,6 @@ export const CreateTask: React.FC<CreateProps> = ({ submit }) => {
     );
     setFieldValue("subtasks", newSubtasks);
   };
-  console.log(errors.subtasks);
   return (
     <ModalForm.Form>
       <TextField

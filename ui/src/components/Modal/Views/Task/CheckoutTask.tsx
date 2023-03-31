@@ -28,7 +28,6 @@ export const CheckoutTask: React.FC<CheckoutProps> = ({ task, changeTo }) => {
         dispatch(updateSubtaskApi({ id: task.id, subtasks: values.subtasks }));
       },
     });
-  console.log(values.status !== initialValues.status);
   const updateSubtask = (
     index: number,
     field: keyof SubTaskType,

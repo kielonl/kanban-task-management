@@ -50,7 +50,6 @@ export const update = async (
   id: string,
   data: BoardCreate | ColumnApi | TaskApi | SubTaskType[]
 ) => {
-  console.log(data);
   const response = await callApi(HTTP_METHOD.PUT, `${endpoint}/${id}`, data);
   return response.data;
 };

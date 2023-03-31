@@ -21,7 +21,6 @@ export const BoardModal: React.FC<BoardModalProps> = ({ submit, ...board }) => {
         columns: board.board?.columns || [],
       },
       onSubmit: () => {
-        console.log(values);
         submit(values);
       },
     });

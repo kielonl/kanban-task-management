@@ -99,7 +99,6 @@ export const createTaskApi = createAsyncThunk(
   async (task: TaskCreate, { getState }) => {
     const state = getState() as { board: BoardState };
     const boardId = state.board.currentBoard.id;
-    //move this to some better place
     if (
       Object.values(task).some((value) => value === "") ||
       Object.values(task).some((value) => value === null)
@@ -169,7 +168,6 @@ export const updateSubtaskApi = createAsyncThunk(
     ) {
       return;
     }
-    console.log(subtask);
     await update(ENDPOINT.SUBTASKS, subtask.id, subtask.subtasks);
     return getOne(ENDPOINT.BOARDS, boardId);
   }
