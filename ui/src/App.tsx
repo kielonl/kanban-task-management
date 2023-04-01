@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { rootStore } from "./store/store";
 import "./App.css";
 import ModalContextProvider from "./contexts/ModalContextProvider";
-import { load } from "./services/StorageManager";
+import { load } from "./services/storageManager";
 
 function App() {
   const themeStorage = load("theme") || "dark";

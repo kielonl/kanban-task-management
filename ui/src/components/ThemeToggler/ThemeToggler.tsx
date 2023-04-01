@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { Icon } from "../../assets/icons/Icon";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { save } from "../../services/StorageManager";
+import { save } from "../../services/storageManager";
 import { CheckboxSlider } from "../CheckboxSlider/CheckboxSlider";
 
 export const ThemeToggler: React.FC<{ className?: string }> = ({
