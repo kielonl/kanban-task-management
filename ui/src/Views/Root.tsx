@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu } from "../components/Menu/Menu";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { load, save } from "../services/StorageManager";
+import { load, save } from "../services/storageManager";
 import { Board } from "./Board";
 
 export const Root = () => {
