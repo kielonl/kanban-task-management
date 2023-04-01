@@ -10,6 +10,10 @@ const server = Fastify();
 const main = async () => {
   await server.register(cors);
 
+  server.get("/", (request, reply) => {
+    reply.send({ hello: "world" });
+  });
+
   server.register(boardRoutes, { prefix: "/board" });
   server.register(columnRoutes, { prefix: "/column" });
   server.register(taskRoutes, { prefix: "/task" });
